@@ -4,13 +4,21 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MONGO_URI: ${MONGO_URI}
-      JWT_SECRET: ${JWT_SECRET}
       PORT: 5000
     depends_on:
       - mongo
     volumes:
       - ./backend:/app
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
   mongo:
     image: mongo:latest
     ports:
