@@ -1,49 +1,16 @@
 <template>
-    <div>
-      <h2>Inscription</h2>
-      <form @submit.prevent="register">
-        <input v-model="name" type="text" placeholder="Nom complet" required />
-        <input v-model="email" type="email" placeholder="Email" required />
-        <input v-model="password" type="password" placeholder="Mot de passe" required />
-        <input v-model="confirmPassword" type="password" placeholder="Confirmer le mot de passe" required />
-        <button type="submit">S'inscrire</button>
-      </form>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-    </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        errorMessage: '',
-      };
-    },
-    methods: {
-      async register() {
-        if (this.password !== this.confirmPassword) {
-          this.errorMessage = 'Les mots de passe ne correspondent pas';
-          return;
-        }
-  
-        try {
-          const response = await axios.post('http://localhost:5000/api/users/register', {
-            name: this.name,
-            email: this.email,
-            password: this.password,
-          });
-          this.$router.push('/login');  // Redirige après l'inscription
-        } catch (error) {
-          this.errorMessage = 'Une erreur est survenue lors de l\'inscription';
-        }
-      },
-    },
-  };
-  </script>
-  
+  <div>
+    <h2>Register</h2>
+    <RegisterForm /> <!-- Composant RegisterForm -->
+  </div>
+</template>
+
+<script>
+import RegisterForm from "../components/RegisterForm.vue";
+
+export default {
+  components: {
+    RegisterForm
+  }
+};
+</script>
