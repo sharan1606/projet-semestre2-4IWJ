@@ -8,7 +8,9 @@ const generateToken = (id: string) => {
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { firstname, lastname, email, password, is_admin } = req.body;
+
+  // Vérifie si l'utilisateur existe déjà
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -16,38 +18,50 @@ export const registerUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  // Crée un nouvel utilisateur
+  try {
+    const user: IUser = new User({
+      firstname,
+      lastname,
+      email,
+      password,
+      is_admin: is_admin || false, // Défaut à `false` si non spécifié
+    });
 
-  const user: IUser = new User({
-    name,
-    email,
-    password: hashedPassword,
-  });
+    const createdUser = await user.save();
 
-  const createdUser = await user.save();
-
-  res.status(201).json({
-    _id: createdUser._id,
-    name: createdUser.name,
-    email: createdUser.email,
-    token: generateToken(createdUser._id.toHexString()),
-  });
+    res.status(201).json({
+      _id: createdUser._id,
+      firstname: createdUser.firstname,
+      lastname: createdUser.lastname,
+      email: createdUser.email,
+      is_admin: createdUser.is_admin,
+      token: generateToken(createdUser._id.toHexString()),
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la création de l\'utilisateur', error });
+  }
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-  
+  const { email, password } = req.body;
+
+  try {
     const user = await User.findOne({ email });
-  
+
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
-        name: user.name,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
+        is_admin: user.is_admin,
         token: generateToken(user._id.toString()),
       });
     } else {
       res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }
-  };
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la connexion', error });
+  }
+};
