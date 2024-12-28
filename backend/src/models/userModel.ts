@@ -2,18 +2,26 @@ import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
+  address: string;
+  telephone: string;
   _id: mongoose.Types.ObjectId;
   matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
 const userSchema: Schema = new mongoose.Schema({
-  name: { type: String, required: true },
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-});
+  address: { type: String },
+  telephone: { type: String, required: true, unique:true },
+},
+{ timestamps: true }
+);
 
 userSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
   return await bcrypt.compare(enteredPassword, this.password);
