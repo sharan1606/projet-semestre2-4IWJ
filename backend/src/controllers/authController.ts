@@ -1,71 +1,93 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
-import User, { IUser } from "../models/userModel";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User, { IUser } from "../models/userModel";
+import crypto from "crypto";
 
-// Générer un token JWT
-const generateToken = (id: string) => {
+// Générer un JWT
+const generateToken = (id: string): string => {
   return jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: "30d" });
 };
 
 // Inscription
-export const registerUser = async (req: Request, res: Response) => {
-  const { firstname, lastname, email, password, address, telephone } = req.body;
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
+  const { email, password, firstname, lastname, address, telephone } = req.body;
 
-  // Vérifier si l'utilisateur existe déjà
-  const userExists = await User.findOne({ email });
+  try {
+    // Vérifier si l'utilisateur existe déjà
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      res.status(400).json({ message: "Utilisateur déjà existant" });
+      return;
+    }
 
-  if (userExists) {
-    res.status(400).json({ message: "Utilisateur déjà existant" });
-    return;
+    // Hachage du mot de passe
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Création de l'utilisateur
+    const user: IUser = new User({
+      idUser: crypto.randomUUID(),
+      email,
+      password: hashedPassword,
+      firstname,
+      lastname,
+      address,
+      telephone,
+      isVerified: true, // Par défaut, validé
+    });
+
+    const createdUser = await user.save();
+
+    res.status(201).json({
+      _id: createdUser.idUser,
+      firstname: createdUser.firstname,
+      lastname: createdUser.lastname,
+      email: createdUser.email,
+      token: generateToken(createdUser.idUser),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
   }
-
-  // Hachage du mot de passe
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  // Création de l'utilisateur
-  const user: IUser = new User({
-    _id: new mongoose.Types.ObjectId(), // Prise en compte de `_id`
-    firstname,
-    lastname,
-    email,
-    password: hashedPassword,
-    address,
-    telephone,
-  });
-
-  const createdUser = await user.save();
-
-  // Réponse avec les données de l'utilisateur créé
-  res.status(201).json({
-    _id: createdUser._id,
-    firstname: createdUser.firstname,
-    lastname: createdUser.lastname,
-    email: createdUser.email,
-    token: generateToken(createdUser._id.toHexString()),
-  });
 };
 
 // Connexion
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
-  // Rechercher l'utilisateur par email
-  const user = await User.findOne({ email });
+  try {
+    // Rechercher l'utilisateur par email
+    const user = await User.findOne({ email });
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-    // Si les informations sont correctes, retourner les détails et un token
-    res.json({
-      _id: user._id,
+    if (!user) {
+      res.status(400).json({ message: "Email ou mot de passe incorrect" });
+      return;
+    }
+
+    // Vérifier si le compte est validé
+    if (!user.isVerified) {
+      res.status(403).json({ message: "Votre compte n'est pas encore validé." });
+      return;
+    }
+
+    // Vérifier le mot de passe
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(400).json({ message: "Email ou mot de passe incorrect" });
+      return;
+    }
+
+    // Générer le JWT
+    const token = generateToken(user.idUser);
+
+    res.status(200).json({
+      _id: user.idUser,
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
-      token: generateToken(user._id.toString()),
+      token,
     });
-  } else {
-    // Sinon, retourner une erreur 401
-    res.status(401).json({ message: "Email ou mot de passe incorrect" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
   }
 };

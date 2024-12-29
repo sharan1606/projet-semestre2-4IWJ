@@ -5,7 +5,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./@types"] // Inclut les types personnalisés
   },
+  "include": ["src/**/*", "@types"], // Prend en compte `@types` dans la compilation
   "exclude": ["node_modules"]
 }
