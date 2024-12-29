@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Register</h2>
     <RegisterForm /> <!-- Composant RegisterForm -->
   </div>
 </template>

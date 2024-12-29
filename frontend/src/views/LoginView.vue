@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Login</h2>
     <LoginForm /> <!-- Composant LoginForm -->
   </div>
 </template>

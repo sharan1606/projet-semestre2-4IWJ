@@ -1,87 +1,86 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import logo from './assets/logo.svg'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/login">Login</RouterLink> <!-- Lien vers la page de connexion -->
-        <RouterLink to="/register">Register</RouterLink> <!-- Lien vers la page d'inscription -->
-      </nav>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <img alt="Sparq logo" :src="logo" />
+      </div>
     </div>
+    
+    <nav class="main-menu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      </ul>
+    </nav>
   </header>
-
-  <RouterView />
+  <body>
+    <router-view />
+  </body>
+  <footer>
+    <p>&copy; 2024 Sparq</p>
+  </footer>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
+  margin-right: 1rem;
+}
+
+.main-menu {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.main-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.main-menu li {
+  margin: 0 1rem;
+}
+
+.main-menu a {
+  text-decoration: none;
+  color: #333;
   display: block;
-  margin: 0 auto 2rem;
+  padding: 0.5rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.main-menu a:hover {
+  background-color: #eee;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.submenu {
+  margin-left: 1rem;
+  list-style-type: disc;
 }
 </style>
