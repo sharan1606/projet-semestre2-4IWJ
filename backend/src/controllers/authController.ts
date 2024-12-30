@@ -47,6 +47,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       token: generateToken(createdUser.idUser),
     });
   } catch (error) {
+    console.error("Erreur lors de l'inscription :", error);
     res.status(500).json({ message: "Erreur serveur", error });
   }
 };
@@ -56,7 +57,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
-    // Rechercher l'utilisateur par email
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -88,6 +88,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       token,
     });
   } catch (error) {
+    console.error("Erreur lors de la connexion :", error);
     res.status(500).json({ message: "Erreur serveur", error });
   }
 };

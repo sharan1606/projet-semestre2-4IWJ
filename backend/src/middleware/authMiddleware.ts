@@ -1,32 +1,36 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import User from "../models/userModel";
+import User, { IUser } from "../models/userModel";
 
-interface Decoded {
+interface DecodedToken {
   id: string;
 }
 
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
+// Middleware pour protéger les routes
+export const protect = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     try {
+      // Extraire le token
       token = req.headers.authorization.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as Decoded;
+      // Décoder le token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
 
-      const user = await User.findOne({ idUser: decoded.id });
-
+      // Rechercher l'utilisateur correspondant au token
+      const user = await User.findById(decoded.id).select("-password");
       if (!user) {
-        return res.status(401).json({ message: "Utilisateur non trouvé" });
+        res.status(401).json({ message: "Utilisateur non trouvé." });
+        return;
       }
 
-      req.user = user;
+      req.user = user; // Attribuer l'utilisateur à `req.user`
       next();
     } catch (error) {
-      res.status(401).json({ message: "Accès refusé, token invalide" });
+      res.status(401).json({ message: "Token invalide ou expiré." });
     }
   } else {
-    res.status(401).json({ message: "Accès refusé, aucun token fourni" });
+    res.status(401).json({ message: "Aucun token fourni." });
   }
 };
