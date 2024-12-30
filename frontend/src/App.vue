@@ -6,13 +6,13 @@ import logo from './assets/sparq.png';
   <header class="header">
     <div class="header-content">
       <div class="logo">
-        <img alt="Sparq logo" :src="logo" width="80" height="80" />
+        <img alt="Sparq logo" :src="logo" width="80" height="80"/>
       </div>
       <nav class="main-menu">
         <ul>
           <li><a href="/">Accueil</a></li>
           <li>
-            <a href="#">Produits</a>
+            <a href="produits">Produits</a>
             <ul class="submenu">
               <li><a href="/categorie1">Catégorie 1</a></li>
               <li><a href="/categorie2">Catégorie 2</a></li>
@@ -54,12 +54,39 @@ import logo from './assets/sparq.png';
   <main>
     <router-view />
   </main>
-  <footer>
-    <p>&copy; 2024 Sparq</p>
+  <footer class="footer">
+    <div class="footer-sections">
+      <div class="footer-section">
+        <img alt="Sparq logo" :src="logo" width="125" height="125" />
+        <p>&copy; 2024 Sparq. Tous droits réservés.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="/mentions-legales">Mentions Légales</a></li>
+          <li><a href="/politique-confidentialite">Politique de Confidentialité</a></li>
+          <li><a href="/conditions-generales-vente">Conditions Générales de Vente</a></li>
+          <li><a href="/droits-image">Droits d'Image</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/livraison">Livraison via Chronopost</a></li>
+          <li><a href="/retours">Retours et Remboursements</a></li>
+          <li><a href="/support-client">Support Client</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email : support@sparq.com</p>
+        <p>Téléphone : +33 1 23 45 67 89</p>
+      </div>
+    </div>
   </footer>
 </template>
 
-<style scoped>
+<style>
 /* Header global */
 .header {
   display: flex;
@@ -68,9 +95,69 @@ import logo from './assets/sparq.png';
   padding: 1rem;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
+  width: 100%;
 }
 
 /* Logo */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Typographie */
+h1, h2, h3, h4, h5, h6, p {
+  font-family: var(--font-family), sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1.25rem;
+}
+h4 {
+  font-size: 1rem;
+}
+h5 {
+  font-size: 0.875rem;
+}
+h6 {
+  font-size: 0.75rem;
+}
+p {
+  font-size: 1rem;
+}
+
+:root {
+  --logo-size: 80px;
+  --primary: #066f50;
+  --secondary: #00bd7e;
+  --background: #ffffff;
+  --text: #000000;
+  --neutral: #c9cbcf;
+  --font-family: 'Roboto', sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background);
+  color: var(--text);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.header-content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .header-content .logo img {
   display: block;
 }
@@ -81,6 +168,7 @@ import logo from './assets/sparq.png';
   display: flex;
   margin: 0;
   padding: 0;
+  flex-wrap: wrap;
 }
 
 .main-menu li {
@@ -129,5 +217,54 @@ import logo from './assets/sparq.png';
 
 .main-menu li:hover > .submenu {
   display: block; /* Affiche le sous-menu lors du survol */
+}
+
+/* Footer global */
+.footer {
+  background-color: #f9f9f9;
+  padding: 2rem 1rem;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-section h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section ul a {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul a:hover {
+  color: #000;
 }
 </style>
