@@ -13,7 +13,7 @@ const router = createRouter({
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: LoginView
     },
     {
@@ -28,5 +28,15 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("token");
+  if (to.matched.some((record) => record.meta.requiresAuth) && !token) {
+    next("/login"); // Redirige vers la page de connexion si pas de token
+  } else {
+    next(); // Autorise la navigation
+  }
+});
+
 
 export default router
