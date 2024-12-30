@@ -31,6 +31,28 @@ const router = createRouter({
       name: 'produits',
       component: () => import('../views/ProductView.vue')
     },
+    {
+      path: '/produits/:id',
+      name: 'produit',
+      component: () => import('../views/ProductDetailsView.vue'),
+      props: true,  // Permet de passer l'ID du produit comme prop
+    },
+    {
+      path: '/panier',
+      name: 'panier',
+      component: () => import('../views/CartView.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/MyAccountView.vue')
+      },
+    {
+      path: '/administrate',
+      name: 'administrate',
+      component: () => import('../views/AdminView.vue')
+    },
+
     // {
     //   path: "/forgot-password",
     //   name: "ForgotPassword",

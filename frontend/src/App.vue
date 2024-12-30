@@ -13,37 +13,30 @@ import logo from './assets/sparq.png';
           <li><a href="/">Accueil</a></li>
           <li>
             <a href="produits">Produits</a>
-            <ul class="submenu">
+            <!-- <ul class="submenu">
               <li><a href="/categorie1">Catégorie 1</a></li>
               <li><a href="/categorie2">Catégorie 2</a></li>
               <li><a href="/categorie3">Catégorie 3</a></li>
-              <li><a href="/produit-details">Détails du Produit</a></li>
-            </ul>
+              <li><a href="/produits/:id">Détails du Produit</a></li>
+            </ul> -->
           </li>
           <li><a href="/panier">Panier</a></li>
           <li>
-            <a href="#">Mon Compte</a>
-            <ul class="submenu">
+            <a href="/account">Mon Compte</a>
+            <!-- <ul class="submenu">
               <li><a href="/mes-commandes">Mes Commandes</a></li>
               <li><a href="/mes-informations">Mes Informations</a></li>
               <li><a href="/reinitialiser-mot-de-passe">Réinitialiser Mot de Passe</a></li>
-            </ul>
+            </ul> -->
           </li>
           <li>
-            <a href="#">Administration</a>
-            <ul class="submenu">
-              <li><a href="/admin/utilisateurs">Gestion des Utilisateurs</a></li>
+            <a href="/administrate">Administration</a>
+            <!-- <ul class="submenu">
+              <li><a href="/admin/users">Gestion des Utilisateurs</a></li>
               <li><a href="/admin/commandes">Gestion des Commandes</a></li>
               <li><a href="/admin/statistiques">Statistiques</a></li>
               <li><a href="/admin/produits">Gestion des Produits</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">Aide</a>
-            <ul class="submenu">
-              <li><a href="/faq">FAQ</a></li>
-              <li><a href="/contact">Contact</a></li>
-            </ul>
+            </ul> -->
           </li>
           <li><a href="/login">Connexion</a></li>
           <li><a href="/register">Inscription</a></li>

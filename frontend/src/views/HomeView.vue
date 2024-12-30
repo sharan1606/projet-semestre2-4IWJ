@@ -71,7 +71,7 @@ const testimonials = ref([
 <style scoped>
 /* Section Hero */
 .hero {
-  background: linear-gradient(to right, #6a11cb, #2575fc);
+  background: linear-gradient(to right, #066F50, #C9CBCF);
   color: #fff;
   text-align: center;
   padding: 5rem 1rem;
@@ -81,7 +81,7 @@ const testimonials = ref([
   margin-bottom: 1rem;
 }
 .hero-content span {
-  color: #ffd700;
+  color: #066F50;
 }
 .hero-content p {
   font-size: 1.25rem;
@@ -97,15 +97,15 @@ const testimonials = ref([
   transition: background 0.3s ease;
 }
 .btn.primary {
-  background: #ffd700;
-  color: #000;
+  background: #066F50;
+  color: #fff;
 }
 .btn.primary:hover {
-  background: #f0c600;
+  background: #00bd7e;
 }
 .btn.secondary {
   background: #fff;
-  color: #2575fc;
+  color: #066F50;
 }
 .btn.secondary:hover {
   background: #f0f0f0;
@@ -188,7 +188,7 @@ const testimonials = ref([
 
 /* Section Contact */
 .contact-banner {
-  background: linear-gradient(to right, #2575fc, #6a11cb);
+  background: linear-gradient(to right, #066F50, #C9CBCF);
   color: #fff;
   text-align: center;
   padding: 3rem 1rem;
