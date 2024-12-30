@@ -52,6 +52,17 @@ const router = createRouter({
       name: 'administrate',
       component: () => import('../views/AdminView.vue')
     },
+    {
+      path:'/mentions-legales',
+      name:'mentions-legales',
+      component: () => import('../views/LegalMentionView.vue')
+    },
+    {
+      path:'/privacy-policy',
+      name:'privacy-policy',
+      component: () => import('../views/PrivacyPolicy.vue')
+      },
+
 
     // {
     //   path: "/forgot-password",

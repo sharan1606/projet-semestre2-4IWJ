@@ -57,7 +57,7 @@ import logo from './assets/sparq.png';
         <h4>Informations</h4>
         <ul>
           <li><a href="/mentions-legales">Mentions Légales</a></li>
-          <li><a href="/politique-confidentialite">Politique de Confidentialité</a></li>
+          <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
           <li><a href="/conditions-generales-vente">Conditions Générales de Vente</a></li>
           <li><a href="/droits-image">Droits d'Image</a></li>
         </ul>

@@ -114,17 +114,14 @@
   
   .admin-sections {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 10px;
     justify-content: space-around;
   }
   
   .admin-section {
-    background-color: #f9f9f9;
-    padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
   }
   
   .admin-section h2 {
