@@ -1,16 +1,16 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  idUser: string; // ID unique de l'utilisateur
-  email: string; // Email unique
-  password: string; // Mot de passe haché
-  lastname: string; // Nom
-  firstname: string; // Prénom
-  address: string; // Adresse
-  telephone: string; // Téléphone
-  isAdmin: boolean; // Rôle administrateur
-  date_inscription: Date; // Date d'inscription
-  isVerified: boolean; // Statut de validation du compte
+  idUser: string;
+  email: string;
+  password: string; 
+  lastname: string; 
+  firstname: string; 
+  address: string; 
+  telephone: string;
+  isAdmin: boolean; 
+  date_inscription: Date; 
+  isVerified: boolean; 
 }
 
 const userSchema: Schema = new mongoose.Schema(

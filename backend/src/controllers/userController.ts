@@ -3,17 +3,17 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import User, { IUser } from "../models/userModel";
 
-// Récupérer tous les utilisateurs
+
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find().select("-password"); // On exclut les mots de passe
+    const users = await User.find().select("-password"); 
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error });
   }
 };
 
-// Récupérer un utilisateur par ID
+
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -27,7 +27,6 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-// Créer un utilisateur
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password, firstname, lastname, address, telephone } = req.body;
 
@@ -63,7 +62,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// Mettre à jour un utilisateur
+
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id);
@@ -90,7 +89,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// Supprimer un utilisateur
+
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id);

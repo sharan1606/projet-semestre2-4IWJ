@@ -1,15 +1,15 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IProduct extends Document {
-  idProduct: string; // ID unique du produit
-  name: string; // Nom du produit
-  description: string; // Description
-  price: number; // Prix
-  stock: number; // Quantité en stock
-  brand: string; // Marque
-  category: string; // Catégorie
-  image: string; // URL de l'image
-  date_add: Date; // Date d'ajout
+  idProduct: string; 
+  name: string; 
+  description: string; 
+  price: number; 
+  stock: number; 
+  brand: string;
+  category: string;
+  image: string;
+  date_add: Date; 
 }
 
 const productSchema: Schema = new mongoose.Schema(
@@ -24,7 +24,7 @@ const productSchema: Schema = new mongoose.Schema(
     image: { type: String, required: true },
     date_add: { type: Date, default: Date.now },
   },
-  { timestamps: true } // Ajoute `createdAt` et `updatedAt`
+  { timestamps: true } 
 );
 
 const Product = mongoose.model<IProduct>("Product", productSchema);
