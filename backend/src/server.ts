@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import cartRoutes from "./routes/cartRoutes";
 import cors from 'cors';
 
 
@@ -23,6 +24,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/carts", cartRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;
