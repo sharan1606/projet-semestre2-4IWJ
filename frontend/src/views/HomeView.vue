@@ -1,8 +1,4 @@
 <script setup>
-<<<<<<< HEAD
-import TheWelcome from '../components/TheWelcome.vue'
-console.log('TheWelcome component imported:', Test);
-=======
 import { ref } from 'vue';
 
 const testimonials = ref([
@@ -22,7 +18,6 @@ const testimonials = ref([
     image: 'https://via.placeholder.com/80',
   },
 ]);
->>>>>>> origin/Develop
 </script>
 
 <template>
