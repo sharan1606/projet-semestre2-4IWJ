@@ -1,24 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-
-const testimonials = ref([
-  {
-    name: 'Alice Dupont',
-    review: 'Super expérience ! Les produits sont de qualité et le service est impeccable.',
-    image: 'https://via.placeholder.com/80',
-  },
-  {
-    name: 'Jean Martin',
-    review: 'Commande facile et livraison rapide. Je recommande fortement !',
-    image: 'https://via.placeholder.com/80',
-  },
-  {
-    name: 'Sophie Durand',
-    review: 'Un site vraiment moderne et des produits innovants.',
-    image: 'https://via.placeholder.com/80',
-  },
-]);
 </script>
+
 
 <template>
   <div class="homepage">
@@ -51,11 +34,24 @@ const testimonials = ref([
     <section class="testimonials">
       <h2>Ce que disent nos clients</h2>
       <div class="testimonial-grid">
-        <div class="testimonial-card" v-for="testimonial in testimonials" :key="testimonial.name">
-          <img :src="testimonial.image" :alt="testimonial.name" />
-          <h3>{{ testimonial.name }}</h3>
-          <p>"{{ testimonial.review }}"</p>
+        <!-- Testimonial Card -->
+         <div id="alice" class="testimonial-card">
+          <img src="../assets/alice.jpg" alt="Alice Dupont" />
+          <h3>Alice Dupont</h3>
+          <p>"Super expérience ! Les produits sont de qualité et le service est impeccable."</p>
         </div>
+        <!-- Testimonial Card -->
+         <div id="jean" class="testimonial-card">
+          <img src="../assets/jean.jpg" alt="Jean Dupont" />
+          <h3>Jean Dupont</h3>
+          <p>"Commande facile et livraison rapide. Je recommande fortement !"</p>
+          </div>
+        <!-- Testimonial Card -->
+         <div id="sophie" class="testimonial-card">
+          <img src="../assets/sophie.png" alt="Sophie Dupont" />
+          <h3>Sophie Dupont</h3>
+          <p>"Un site vraiment moderne et des produits innovants."</p>
+         </div>
       </div>
     </section>
 
