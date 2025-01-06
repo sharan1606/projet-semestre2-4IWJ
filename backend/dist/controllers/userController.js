@@ -12,49 +12,114 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.registerUser = void 0;
-const userModel_1 = __importDefault(require("../models/userModel"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getAllUsers = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const generateToken = (id) => {
-    return jsonwebtoken_1.default.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-};
-const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, email, password } = req.body;
-    const userExists = yield userModel_1.default.findOne({ email });
-    if (userExists) {
-        res.status(400).json({ message: 'Utilisateur déjà existant' });
-        return;
+const crypto_1 = __importDefault(require("crypto"));
+const userModel_1 = __importDefault(require("../models/userModel"));
+// Récupérer tous les utilisateurs
+const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield userModel_1.default.find().select("-password"); // Exclut les mots de passe
+        res.status(200).json(users);
     }
-    const salt = yield bcryptjs_1.default.genSalt(10);
-    const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
-    const user = new userModel_1.default({
-        name,
-        email,
-        password: hashedPassword,
-    });
-    const createdUser = yield user.save();
-    res.status(201).json({
-        _id: createdUser._id,
-        name: createdUser.name,
-        email: createdUser.email,
-        token: generateToken(createdUser._id.toHexString()),
-    });
+    catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error });
+    }
 });
-exports.registerUser = registerUser;
-const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
-    const user = yield userModel_1.default.findOne({ email });
-    if (user && (yield bcryptjs_1.default.compare(password, user.password))) {
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id.toString()),
+exports.getAllUsers = getAllUsers;
+// Récupérer les détails d’un utilisateur par ID
+const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userModel_1.default.findById(req.params.id).select("-password");
+        if (!user) {
+            res.status(404).json({ message: "Utilisateur non trouvé." });
+            return;
+        }
+        res.status(200).json(user);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error });
+    }
+});
+exports.getUserById = getUserById;
+// Créer un utilisateur
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, firstname, lastname, address, telephone, isAdmin } = req.body;
+    try {
+        const userExists = yield userModel_1.default.findOne({ email });
+        if (userExists) {
+            res.status(400).json({ message: "Email déjà utilisé." });
+            return;
+        }
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
+        const newUser = new userModel_1.default({
+            idUser: crypto_1.default.randomUUID(),
+            email,
+            password: hashedPassword,
+            firstname,
+            lastname,
+            address,
+            telephone,
+            isAdmin: isAdmin || false,
+            isVerified: true,
+        });
+        const createdUser = yield newUser.save();
+        res.status(201).json({
+            _id: createdUser._id,
+            email: createdUser.email,
+            firstname: createdUser.firstname,
+            lastname: createdUser.lastname,
         });
     }
-    else {
-        res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error });
     }
 });
-exports.loginUser = loginUser;
+exports.createUser = createUser;
+// Mettre à jour un utilisateur
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userModel_1.default.findById(req.params.id);
+        if (!user) {
+            res.status(404).json({
+                message: "Utilisateur non trouvé.",
+            });
+            return;
+        }
+        // Mise à jour des champs
+        user.firstname = req.body.firstname || user.firstname;
+        user.lastname = req.body.lastname || user.lastname;
+        user.email = req.body.email || user.email;
+        user.address = req.body.address || user.address;
+        user.telephone = req.body.telephone || user.telephone;
+        user.isAdmin = req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+        const updatedUser = yield user.save();
+        res.status(200).json({
+            _id: updatedUser._id,
+            email: updatedUser.email,
+            firstname: updatedUser.firstname,
+            lastname: updatedUser.lastname,
+        });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error });
+    }
+});
+exports.updateUser = updateUser;
+// Supprimer un utilisateur
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userModel_1.default.findById(req.params.id);
+        if (!user) {
+            res.status(404).json({ message: "Utilisateur non trouvé." });
+            return;
+        }
+        yield userModel_1.default.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "Utilisateur supprimé avec succès." });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error });
+    }
+});
+exports.deleteUser = deleteUser;
