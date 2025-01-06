@@ -100,8 +100,10 @@ import { ref } from 'vue';
   background: #00bd7e;
 }
 .btn.secondary {
+  padding: 0.75rem 1.5rem;
   background: #fff;
   color: #066F50;
+  border-radius: 5px;
 }
 .btn.secondary:hover {
   background: #f0f0f0;
