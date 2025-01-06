@@ -62,6 +62,16 @@ const router = createRouter({
       name:'privacy-policy',
       component: () => import('../views/PrivacyPolicy.vue')
       },
+    {
+      path:'/cgv',
+      name:'cgv',
+      component: () => import('../views/Cgv.vue')
+    },
+    {
+      path:'/cookies',
+      name:'cookies',
+      component: () => import('../views/Cookies.vue')
+    },
 
 
     // {

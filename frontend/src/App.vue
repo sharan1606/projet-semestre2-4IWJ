@@ -58,8 +58,8 @@ import logo from './assets/sparq.png';
         <ul>
           <li><a href="/mentions-legales">Mentions Légales</a></li>
           <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
-          <li><a href="/conditions-generales-vente">Conditions Générales de Vente</a></li>
-          <li><a href="/droits-image">Droits d'Image</a></li>
+          <li><a href="/cgv">Conditions Générales de Vente</a></li>
+          <li><a href="/cookies">Politique des cookies</a></li>
         </ul>
       </div>
       <div class="footer-section">
