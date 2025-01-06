@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import UsersView from '../views/UsersView.vue'; // Importez la vue UsersView
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,11 +47,17 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: () => import('../views/MyAccountView.vue')
-      },
+    },
     {
       path: '/administrate',
       name: 'administrate',
       component: () => import('../views/AdminView.vue')
+    },
+    // Ajoutez la route pour la gestion des utilisateurs
+    {
+      path: '/admin/users',
+      name: 'users',
+      component: UsersView  // Composant UsersView
     },
     {
       path:'/mentions-legales',
@@ -61,7 +68,7 @@ const router = createRouter({
       path:'/privacy-policy',
       name:'privacy-policy',
       component: () => import('../views/PrivacyPolicy.vue')
-      },
+    },
     {
       path:'/cgv',
       name:'cgv',
@@ -76,25 +83,19 @@ const router = createRouter({
       path:'/delivery',
       name:'livraison',
       component: () => import('../views/Delivery.vue')
-      },
+    },
     {
       path:'/retours',
       name:'retours',
       component: () => import('../views/Retours.vue')
-      },
+    },
     {
       path:'/contact',
       name:'contact',
       component: () => import('../views/Contact.vue')
-      },
-
-    // {
-    //   path: "/forgot-password",
-    //   name: "ForgotPassword",
-    //   component: ForgotPasswordView,
-    // }
+    },
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
@@ -105,5 +106,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-
-export default router
+export default router;
