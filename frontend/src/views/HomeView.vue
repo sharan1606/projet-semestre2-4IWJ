@@ -38,7 +38,7 @@ const testimonials = ref([
     <section class="featured-products">
       <h2>Nos Produits Phares</h2>
       <div class="product-grid">
-        <div class="product-card" v-for="n in 6" :key="n">
+        <div class="product-card" v-for="n in 4" :key="n">
           <img :src="'https://via.placeholder.com/300x200?text=Produit+' + n" :alt="'Produit ' + n" />
           <h3>Produit {{ n }}</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
