@@ -1,10 +1,13 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
-        <h3>Êtes-vous sûr de vouloir supprimer cet utilisateur ?</h3>
+        <h3 v-if="!isLoading && !errorMessage">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</h3>
+        <h3 v-if="errorMessage">{{ errorMessage }}</h3>
         <div class="modal-actions">
-          <button @click="confirmDelete">Confirmer</button>
-          <button @click="cancelDelete">Annuler</button>
+          <button v-if="isLoading" disabled>Chargement...</button>
+          <button v-if="!isLoading && !errorMessage" @click="confirmDelete">Confirmer</button>
+          <button v-if="!isLoading && !errorMessage" @click="cancelDelete">Annuler</button>
+          <button v-if="!isLoading && errorMessage" @click="cancelDelete">Fermer</button>
         </div>
       </div>
     </div>
@@ -13,14 +16,24 @@
   <script>
   export default {
     props: {
-      showModal: Boolean,
-      userToDelete: Object      
+      showModal: Boolean, 
+      userToDelete: Object 
+    },
+    data() {
+      return {
+        isLoading: false, 
+        errorMessage: null 
+      };
     },
     methods: {
       confirmDelete() {
+        this.isLoading = true; 
+        this.errorMessage = null; 
         this.$emit('confirm-delete', this.userToDelete);
       },
       cancelDelete() {
+        this.isLoading = false; 
+        this.errorMessage = null; 
         this.$emit('cancel-delete');
       }
     }
@@ -73,5 +86,9 @@
   .modal-actions button:hover {
     background-color: #2980b9;
   }
-  </style>
   
+  .modal-actions button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+  </style>  
