@@ -1,36 +1,45 @@
 <template>
-    <div class="admin-dashboard">
-      <h1>Tableau de bord Administratif</h1>
-  
-      <div class="admin-sections">
-        <!-- Gestion des Utilisateurs -->
-        <div class="admin-section">
-          <h2>Gestion des Utilisateurs</h2>
-          <button class="action-button" @click="navigateToUsers">Voir les utilisateurs</button>
-        </div>
-  
-        <!-- Gestion des Commandes -->
-        <div class="admin-section">
-          <h2>Gestion des Commandes</h2>
-          <button class="action-button" @click="navigateToOrders">Voir les commandes</button>
-        </div>
-  
-        <!-- Statistiques -->
-        <div class="admin-section">
-          <h2>Statistiques</h2>
-          <div class="chart-container">
-            <canvas id="salesChart"></canvas>
-          </div>
-          <button class="action-button" @click="navigateToStats">Voir les statistiques</button>
-        </div>
-  
-        <!-- Gestion des Produits -->
-        <div class="admin-section">
-          <h2>Gestion des Produits</h2>
-          <button class="action-button" @click="navigateToProducts">Voir les produits</button>
-        </div>
-      </div>
+<div class="admin-dashboard">
+  <h1>Tableau de bord Administratif</h1>
+
+  <div class="graph-section">
+    <h2>Graphique des ventes</h2>
+    <div class="chart-container">
+      <canvas id="salesChart"></canvas>
     </div>
+    <button class="action-button" @click="navigateToStats">Voir les statistiques</button>
+  </div>
+
+  
+  <div class="stock-section">
+    <h2>Produits en rupture de stock</h2>
+    <ul>
+      <li v-for="product in outOfStockProducts" :key="product.id">
+        {{ product.name }}
+      </li>
+    </ul>
+    <button class="action-button" @click="navigateToProducts">Voir les produits</button>
+  </div>
+
+  <div class="orders-section">
+    <h2>Commandes en attente</h2>
+    <ul>
+      <li v-for="order in pendingOrders" :key="order.id">
+        {{ order.id }} - {{ order.total }} €
+      </li>
+    </ul>
+    <button class="action-button" @click="navigateToOrders">Voir les commandes</button>
+  </div>
+
+  <div class="users-section">
+    <h2>Derniers utilisateurs inscrits</h2>
+    <ul>
+      <li v-for="user in lastUsers" :key="user.id">
+        {{ user.name }} - {{ user.email }}
+      </li>
+    </ul>
+  </div>
+</div>
   </template>
   
   <script>

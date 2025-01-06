@@ -1,3 +1,53 @@
+// Recuperer les informations de l'utilisateur et afficher son nom, email et numéro de téléphone a partir de la base de données
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      user: {
+        name: '',
+        email: '',
+        phone: '',
+      },
+      orders: [],
+    };
+  },
+  created() {
+    this.fetchUserData();
+    this.fetchUserOrders();
+  },
+  methods: {
+    async fetchUserData() {
+      try {
+        const response = await axios.get('/api/user');
+        this.user = response.data;
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    },
+    async fetchUserOrders() {
+      try {
+        const response = await axios.get('/api/orders');
+        this.orders = response.data;
+      } catch (error) {
+        console.error('Error fetching user orders:', error);
+      }
+    },
+    editProfile() {
+      this.$router.push({ name: 'edit-profile' });
+    },
+    viewOrderDetails(orderId) {
+      this.$router.push({ name: 'order-details', params: { id: orderId } });
+    },
+    changePassword() {
+      this.$router.push({ name: 'change-password' });
+    },
+  },
+};
+</script>
+
+
 <template>
     <div class="my-account-view">
       <section class="account-header">
@@ -43,39 +93,7 @@
       </section>
     </div>
   </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        user: {
-          name: 'John Doe',
-          email: 'johndoe@example.com',
-          phone: '+1234567890',
-        },
-        orders: [
-          { id: 1, status: 'Livré', total: 59.99 },
-          { id: 2, status: 'En cours', total: 25.50 },
-          { id: 3, status: 'Annulé', total: 19.99 },
-        ],
-      };
-    },
-    methods: {
-      editProfile() {
-        // Logique pour modifier le profil
-        this.$router.push({ name: 'edit-profile' });
-      },
-      viewOrderDetails(orderId) {
-        // Logique pour afficher les détails de la commande
-        this.$router.push({ name: 'order-details', params: { id: orderId } });
-      },
-      changePassword() {
-        // Logique pour changer le mot de passe
-        this.$router.push({ name: 'change-password' });
-      },
-    },
-  };
-  </script>
+
   
   <style scoped>
   .my-account-view {
