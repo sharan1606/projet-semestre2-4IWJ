@@ -72,7 +72,21 @@ const router = createRouter({
       name:'cookies',
       component: () => import('../views/Cookies.vue')
     },
-
+    {
+      path:'/delivery',
+      name:'livraison',
+      component: () => import('../views/Delivery.vue')
+      },
+    {
+      path:'/retours',
+      name:'retours',
+      component: () => import('../views/Retours.vue')
+      },
+    {
+      path:'/contact',
+      name:'contact',
+      component: () => import('../views/Contact.vue')
+      },
 
     // {
     //   path: "/forgot-password",
