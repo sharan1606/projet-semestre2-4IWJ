@@ -38,6 +38,7 @@ export default {
       password: "",
       emailError: "",
       passwordError: "",
+      loginError: "",
     };
   },
   computed: {
@@ -54,9 +55,35 @@ export default {
     },
   },
   methods: {
-    submitForm() {
-      if (this.isFormValid) {
-        alert("Formulaire soumis avec succès!");
+    async submitForm() {
+      if (!this.isFormValid) return;
+
+      try {
+        // Requête POST au backend
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Connexion réussie
+          this.$router.push("/");
+          alert(`Connexion réussie. Bienvenue ${data.firstname} !`);
+          localStorage.setItem("token", data.token); // Stocke le token JWT
+        } else {
+          // Gestion des erreurs
+          this.loginError = data.message || "Erreur lors de la connexion.";
+        }
+      } catch (error) {
+        this.loginError = "Erreur serveur. Veuillez réessayer plus tard.";
       }
     },
     goToForgotPassword() {
@@ -65,6 +92,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .login-form {

@@ -24,14 +24,14 @@
       aria-describedby="lastNameError"
     />
 
-    <!-- Date de naissance avec vérification d'âge -->
     <TextInput
-      label="Date de naissance"
-      id="dob"
-      type="date"
-      v-model="dob"
-      :error="dobError"
-      aria-describedby="dobError"
+      label="Adresse"
+      id="address"
+      type="text"
+      placeholder="Entrez votre adresse"
+      v-model="address"
+      :error="addressError"
+      aria-describedby="addressError"
     />
 
     <!-- Champ Téléphone -->
@@ -40,7 +40,7 @@
       id="phone"
       type="tel"
       placeholder="Entrez votre numéro de téléphone"
-      v-model="phone"
+      v-model="telephone"
       :error="phoneError"
       aria-describedby="phoneError"
     />
@@ -99,18 +99,18 @@ export default {
     return {
       firstName: "",
       lastName: "",
-      dob: "",
-      phone: "",
+      telephone: "",
       email: "",
       password: "",
       confirmPassword: "",
+      address: "",
       firstNameError: "",
       lastNameError: "",
-      dobError: "",
       phoneError: "",
       emailError: "",
       passwordError: "",
       confirmPasswordError: "",
+      addressError: "",
       registerError: "",
     };
   },
@@ -119,20 +119,20 @@ export default {
       return (
         this.firstName &&
         this.lastName &&
-        this.dob &&
-        this.phone &&
+        this.telephone &&
         this.email &&
         this.password &&
         this.confirmPassword &&
+        this.address &&
         !this.firstNameError &&
         !this.lastNameError &&
-        !this.dobError &&
         !this.phoneError &&
         !this.emailError &&
         !this.passwordError &&
-        !this.confirmPasswordError
+        !this.confirmPasswordError &&
+        !this.addressError
       );
-    },
+    }
   },
   watch: {
     email(value) {
@@ -144,9 +144,8 @@ export default {
     confirmPassword(value) {
       this.confirmPasswordError = value === this.password ? "" : "Les mots de passe ne correspondent pas.";
     },
-    dob(value) {
-      const age = this.calculateAge(value);
-      this.dobError = age < 18 ? "Vous devez avoir au moins 18 ans." : "";
+    address(value) {
+    this.addressError = value.length > 5 ? "" : "L'adresse doit contenir au moins 5 caractères.";
     },
     phone(value) {
       this.phoneError = value.length >= 10 ? "" : "Veuillez entrer un numéro de téléphone valide.";
@@ -156,19 +155,40 @@ export default {
     submitForm() {
       if (this.isFormValid) {
         this.registerError = "";
-        this.registerUser(this.firstName, this.lastName, this.dob, this.phone, this.email, this.password);
+        // Envoi des données à l'API
+        fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstname: this.firstName,
+            lastname: this.lastName,
+            telephone: this.telephone,
+            email: this.email,
+            password: this.password,
+            address: this.address,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message) {
+              alert("Inscription réussie !");
+              this.$router.push("/login");
+            } else {
+              this.registerError = data.error || "Une erreur est survenue.";
+            }
+          })
+          .catch((error) => {
+            console.error("Erreur lors de l'inscription :", error);
+            this.registerError = "Erreur serveur. Veuillez réessayer plus tard.";
+          });
       }
     },
-    registerUser(firstName, lastName, dob, phone, email, password) {
-      console.log("Utilisateur enregistré avec :", { firstName, lastName, dob, phone, email, password });
+    registerUser(firstName, lastName, telephone, email, password, address) {
+      console.log("Utilisateur enregistré avec :", { firstName, lastName, telephone, email, password, address });
       alert("Inscription réussie !");
-    },
-    calculateAge(dob) {
-      const birthDate = new Date(dob);
-      const age = new Date().getFullYear() - birthDate.getFullYear();
-      const m = new Date().getMonth() - birthDate.getMonth();
-      return m < 0 || (m === 0 && new Date().getDate() < birthDate.getDate()) ? age - 1 : age;
-    },
+    }
   },
 };
 </script>
