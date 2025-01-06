@@ -173,14 +173,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 form {
   max-width: 600px;
   margin: 1rem auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 1rem;
