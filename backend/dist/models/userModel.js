@@ -12,7 +12,7 @@ const userSchema = new mongoose_1.default.Schema({
     firstname: { type: String, required: true },
     address: { type: String, required: true },
     telephone: { type: String, required: true },
-    isAdmin: { type: Boolean, default: true },
+    isAdmin: { type: Boolean, default: false },
     date_inscription: { type: Date, default: Date.now },
     isVerified: { type: Boolean, default: true }, // Par défaut, compte validé
 }, { timestamps: true });

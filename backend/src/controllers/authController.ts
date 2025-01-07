@@ -156,25 +156,32 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
+    console.log("Tentative de connexion :", { email, password });
+
     const user = await User.findOne({ email });
 
     if (!user) {
+      console.log("Utilisateur non trouvé");
       res.status(400).json({ message: "Email ou mot de passe incorrect." });
       return;
     }
 
     if (!user.isVerified) {
+      console.log("Compte non vérifié");
       res.status(403).json({ message: "Votre compte n'est pas encore confirmé." });
       return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("Mot de passe incorrect");
       res.status(400).json({ message: "Email ou mot de passe incorrect." });
       return;
     }
 
     const token = generateToken(user.idUser);
+
+    console.log("Connexion réussie :", user);
 
     res.status(200).json({
       _id: user.idUser,

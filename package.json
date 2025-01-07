@@ -2,10 +2,22 @@
   "dependencies": {
     "@types/express": "^5.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+<<<<<<< HEAD
+    "nodemailer": "^6.9.16",
     "typescript": "^5.7.2"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.3",
     "@types/nodemailer": "^6.4.17"
+=======
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+>>>>>>> origin/Develop
   }
 }

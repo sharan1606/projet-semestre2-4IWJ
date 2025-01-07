@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import ProductView from '../views/ProductView.vue';
+import ProductDetailsView from '../views/ProductDetailsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,9 +27,95 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
-    }
+    },
+    {
+      path: '/produits',
+      name: 'produits',
+      component: () => import('../views/ProductView.vue')
+    },
+    {
+      path: '/produits/:id',
+      name: 'produit',
+      component: () => import('../views/ProductDetailsView.vue'),
+      props: true,  // Permet de passer l'ID du produit comme prop
+    },
+    {
+      path: '/panier',
+      name: 'panier',
+      component: () => import('../views/CartView.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/MyAccountView.vue')
+    },
+    {
+      path: '/administrate',
+      name: 'administrate',
+      component: () => import('../views/AdminView.vue')
+    },
+    // Ajoutez la route pour la gestion des utilisateurs
+    // {
+    //   path: '/admin/users',
+    //   name: 'users',
+    //   component: UsersView  // Composant UsersView
+    // },
+    {
+      path:'/mentions-legales',
+      name:'mentions-legales',
+      component: () => import('../views/LegalMentionView.vue')
+    },
+    {
+      path:'/privacy-policy',
+      name:'privacy-policy',
+      component: () => import('../views/PrivacyPolicy.vue')
+    },
+    {
+      path:'/cgv',
+      name:'cgv',
+      component: () => import('../views/Cgv.vue')
+    },
+    {
+      path:'/cookies',
+      name:'cookies',
+      component: () => import('../views/Cookies.vue')
+    },
+    {
+      path:'/delivery',
+      name:'livraison',
+      component: () => import('../views/Delivery.vue')
+    },
+    {
+      path:'/retours',
+      name:'retours',
+      component: () => import('../views/Retours.vue')
+    },
+    {
+      path:'/contact',
+      name:'contact',
+      component: () => import('../views/Contact.vue')
+      },
+
+      {
+        path: '/',
+        name: 'ProductView',
+        component: () => import('../components/ProductCard.vue')
+      },
+
+      {
+        path: '/product-details/:id',
+        name: 'ProductDetailsView',
+        component: ProductDetailsView,
+        props: true,
+      },
+
+    // {
+    //   path: "/forgot-password",
+    //   name: "ForgotPassword",
+    //   component: ForgotPasswordView,
+    // }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
@@ -38,5 +126,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-
-export default router
+export default router;
