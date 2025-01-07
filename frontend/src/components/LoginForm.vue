@@ -114,6 +114,13 @@ h2 {
   font-weight: 600;
 }
 
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
 .forgot-password-link {
   color: #066f50;
   text-align: center;
