@@ -52,7 +52,7 @@
           <p>{{ totalPrice - discount }} €</p>
         </div>
         <div class="buttons-wrap">
-          <button @click="continueShopping" class="continue-shopping-btn">Continuer vos achats</button>
+          <!-- <button @click="continueShopping" class="continue-shopping-btn">Continuer vos achats</button> -->
           <div id="paypal-button-container"></div>
         </div>
       </div>
@@ -138,9 +138,9 @@ export default {
         alert('Code promo invalide');
       }
     },
-    continueShopping() {
-      this.$router.push('/shop');
-    },
+    // continueShopping() {
+    //   this.$router.push('/shop');
+    // },
   }
 };
 </script>
