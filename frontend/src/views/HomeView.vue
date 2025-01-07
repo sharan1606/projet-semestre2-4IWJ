@@ -21,22 +21,38 @@ const testimonials = ref([
   },
 ]);
 
-const featuredProducts = ref<Product[]>([]);
+const featuredProducts = ref<Product[]>([
+  {
+    id: 1,
+    name: 'Coque Ultra-Protection',
+    description: 'Protection en silicone pour iPhone.',
+    image: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT1L3_AV2?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1699565910662',
+    price: 29.99,
+  },
+  {
+    id: 2,
+    name: 'Chargeur Rapide',
+    description: 'Chargeur sans fil pour smartphone.',
+    image: 'https://imgs.search.brave.com/MmenQlAzZmKqYLJFd58g5eCUj9CtO7eV9bTQcbINObU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcGku/YWxsLWJhdHRlcmll/cy5mci9JTlRFUlNI/T1Avc3RhdGljL1dG/Uy9VcGVyZ3ktQWxs/YmF0dGVyaWVzRlIt/U2l0ZS8tL1VwZXJn/eS9mcl9GUi9ML0dD/VjkwNDhfMV9MLmpw/Zw',
+    price: 39.99,
+  },
+  {
+    id: 3,
+    name: 'Écouteurs Bluetooth',
+    description: 'Écouteurs sans fil avec réduction de bruit.',
+    image: 'https://imgs.search.brave.com/6T56yCgVFEJiP7OO1Nk6gLFr-zhlg9cJSrO4SE7Ip5c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzFUa1hnWGhRbkwu/anBn',
+    price: 49.99,
+  },
+  {
+    id: 4,
+    name: 'Support Téléphone Voiture',
+    description: 'Support magnétique pour smartphone.',
+    image: 'https://imgs.search.brave.com/CbwMsjmmGOpoOK0SHwY4L6TEJ36LWqnJ53z2kbEK_OU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFxS1o4a1N1a0wu/anBn',
+    price: 59.99,
+  },
+]);
 
-// Fonction pour récupérer les produits
-const fetchFeaturedProducts = async () => {
-  try {
-    const allProducts = await productService.getAllProducts();
-    featuredProducts.value = allProducts.slice(0, 4); // Limite à 4 produits
-  } catch (error) {
-    console.error('Erreur lors de la récupération des produits phares :', error);
-  }
-};
-
-// Récupération des produits au montage
-onMounted(fetchFeaturedProducts);
 </script>
-
 
 <template>
   <div class="homepage">
@@ -64,7 +80,7 @@ onMounted(fetchFeaturedProducts);
           <img :src="product.image" :alt="product.name" />
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
-          <a href="#" class="btn small">Voir plus</a>
+          <div class="price">{{ product.price }} €</div> <!-- Affichage du prix -->
         </div>
       </div>
     </section>
@@ -78,7 +94,7 @@ onMounted(fetchFeaturedProducts);
           v-for="testimonial in testimonials" 
           :key="testimonial.name"
         >
-          <img :src="testimonial.image" :alt="testimonial.name" />
+          <img :src="'https://cdn-icons-png.flaticon.com/512/4519/4519678.png'" :alt="testimonial.name" />
           <h3>{{ testimonial.name }}</h3>
           <p>"{{ testimonial.review }}"</p>
         </div>
@@ -94,8 +110,7 @@ onMounted(fetchFeaturedProducts);
   </div>
 </template>
 
-<style >
-/* Styles inchangés */
+<style>
 /* Section Hero */
 .hero {
   background: linear-gradient(to right, #066F50, #C9CBCF);
@@ -137,6 +152,7 @@ onMounted(fetchFeaturedProducts);
 .btn.secondary:hover {
   background: #f0f0f0;
 }
+
 /* Section Produits Phares */
 .featured-products {
   text-align: center;
@@ -183,6 +199,7 @@ onMounted(fetchFeaturedProducts);
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
 }
+
 /* Section Avis des clients */
 .testimonials {
   text-align: center;
