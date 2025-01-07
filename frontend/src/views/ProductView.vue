@@ -98,7 +98,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.fetchProducts(); // Appel à l'API au montage du composant
+    this.fetchProducts();
   },
 });
 </script>

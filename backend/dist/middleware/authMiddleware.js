@@ -24,16 +24,21 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             token = req.headers.authorization.split(" ")[1];
             // Décoder le token
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            // Rechercher l'utilisateur correspondant et l'attacher à `req.user`
-            req.user = yield userModel_1.default.findById(decoded.id).select("-password");
+            // Rechercher l'utilisateur correspondant au token
+            const user = yield userModel_1.default.findById(decoded.id).select("-password");
+            if (!user) {
+                res.status(401).json({ message: "Utilisateur non trouvé." });
+                return;
+            }
+            req.user = user; // Attribuer l'utilisateur à `req.user`
             next();
         }
         catch (error) {
-            res.status(401).json({ message: "Accès refusé, token invalide." });
+            res.status(401).json({ message: "Token invalide ou expiré." });
         }
     }
     else {
-        res.status(401).json({ message: "Accès refusé, aucun token fourni." });
+        res.status(401).json({ message: "Aucun token fourni." });
     }
 });
 exports.protect = protect;
