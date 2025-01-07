@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import UsersView from '../views/UsersView.vue'; // Importez la vue UsersView
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import ProductView from '../views/ProductView.vue';
+import ProductDetailsView from '../views/ProductDetailsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,7 +94,26 @@ const router = createRouter({
       path:'/contact',
       name:'contact',
       component: () => import('../views/Contact.vue')
-    },
+      },
+
+      {
+        path: '/',
+        name: 'ProductView',
+        component: () => import('../components/ProductCard.vue')
+      },
+
+      {
+        path: '/product-details/:id',
+        name: 'ProductDetailsView',
+        component: ProductDetailsView,
+        props: true,
+      },
+
+    // {
+    //   path: "/forgot-password",
+    //   name: "ForgotPassword",
+    //   component: ForgotPasswordView,
+    // }
   ]
 });
 
