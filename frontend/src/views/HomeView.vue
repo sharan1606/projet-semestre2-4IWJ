@@ -3,41 +3,40 @@ import { ref, onMounted } from 'vue';
 import { productService } from '../services/productService';
 import { Product } from '../types/product';
 
-//Recuperer les produits de la base de données dynamiquement
-
-
 const testimonials = ref([
   {
     name: 'Alice Dupont',
     review: 'Super expérience ! Les produits sont de qualité et le service est impeccable.',
-    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231019.png',
+    image: 'https://via.placeholder.com/80',
   },
   {
     name: 'Jean Martin',
     review: 'Commande facile et livraison rapide. Je recommande fortement !',
-    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231020.png',
+    image: 'https://via.placeholder.com/80',
   },
   {
     name: 'Sophie Durand',
     review: 'Un site vraiment moderne et des produits innovants.',
-    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231019.png',
+    image: 'https://via.placeholder.com/80',
   },
 ]);
-const featuredProducts = ref([] as Product[]);
+
+const featuredProducts = ref<Product[]>([]);
 
 // Fonction pour récupérer les produits
 const fetchFeaturedProducts = async () => {
   try {
     const allProducts = await productService.getAllProducts();
-    featuredProducts.value = allProducts.slice(0, 4); // Limite à 4 produits pour la section
+    featuredProducts.value = allProducts.slice(0, 4); // Limite à 4 produits
   } catch (error) {
     console.error('Erreur lors de la récupération des produits phares :', error);
   }
 };
 
-// Récupération des produits lors du montage
+// Récupération des produits au montage
 onMounted(fetchFeaturedProducts);
 </script>
+
 
 <template>
   <div class="homepage">
@@ -57,13 +56,15 @@ onMounted(fetchFeaturedProducts);
     <section class="featured-products">
       <h2>Nos Produits Phares</h2>
       <div class="product-grid">
-        <!-- Boucle sur les produits récupérés -->
-        <div class="product-card" v-for="product in featuredProducts" :key="product.idProduct">
+        <div 
+          v-for="product in featuredProducts" 
+          :key="product.id" 
+          class="product-card"
+        >
           <img :src="product.image" :alt="product.name" />
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
-          <p class="price">{{ product.price }} €</p>
-          <a :href="`/produits/${product.idProduct}`" class="btn small">Voir plus</a>
+          <a href="#" class="btn small">Voir plus</a>
         </div>
       </div>
     </section>
@@ -72,7 +73,11 @@ onMounted(fetchFeaturedProducts);
     <section class="testimonials">
       <h2>Ce que disent nos clients</h2>
       <div class="testimonial-grid">
-        <div class="testimonial-card" v-for="testimonial in testimonials" :key="testimonial.name">
+        <div 
+          class="testimonial-card" 
+          v-for="testimonial in testimonials" 
+          :key="testimonial.name"
+        >
           <img :src="testimonial.image" :alt="testimonial.name" />
           <h3>{{ testimonial.name }}</h3>
           <p>"{{ testimonial.review }}"</p>
@@ -89,7 +94,7 @@ onMounted(fetchFeaturedProducts);
   </div>
 </template>
 
-<style scoped>
+<style >
 /* Styles inchangés */
 /* Section Hero */
 .hero {
@@ -132,7 +137,6 @@ onMounted(fetchFeaturedProducts);
 .btn.secondary:hover {
   background: #f0f0f0;
 }
-
 /* Section Produits Phares */
 .featured-products {
   text-align: center;
@@ -179,7 +183,6 @@ onMounted(fetchFeaturedProducts);
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
 }
-
 /* Section Avis des clients */
 .testimonials {
   text-align: center;

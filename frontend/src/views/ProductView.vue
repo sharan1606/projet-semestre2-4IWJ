@@ -37,47 +37,65 @@
         <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
       </select>
     </div>
-  </template>
- 
-<script>
-  export default {
-    data() {
-      return {
-        products: [
-          { id: 1, name: 'Coque Ultra-Protection', price: 19.99, image: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT1L3_AV2?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1699565910662', category: 'Accessoires' },
-          { id: 2, name: 'Chargeur Rapide', price: 29.99, image: 'https://imgs.search.brave.com/MmenQlAzZmKqYLJFd58g5eCUj9CtO7eV9bTQcbINObU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcGku/YWxsLWJhdHRlcmll/cy5mci9JTlRFUlNI/T1Avc3RhdGljL1dG/Uy9VcGVyZ3ktQWxs/YmF0dGVyaWVzRlIt/U2l0ZS8tL1VwZXJn/eS9mcl9GUi9ML0dD/VjkwNDhfMV9MLmpw/Zw', category: 'Chargeurs' },
-          { id: 3, name: 'Écouteurs Bluetooth', price: 49.99, image: 'https://imgs.search.brave.com/6T56yCgVFEJiP7OO1Nk6gLFr-zhlg9cJSrO4SE7Ip5c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzFUa1hnWGhRbkwu/anBn', category: 'Audio' },
-          { id: 4, name: 'Support Téléphone Voiture', price: 14.99, image: 'https://imgs.search.brave.com/CbwMsjmmGOpoOK0SHwY4L6TEJ36LWqnJ53z2kbEK_OU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFxS1o4a1N1a0wu/anBn', category: 'Supports' },
-          { id: 5, name: 'Kit de Nettoyage', price: 9, image: 'https://imgs.search.brave.com/3lKDcQkRIGvedLnYaD694XE6gQYJFKKJsT2GLx0iLrA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFjWml1YTA1WEwu/anBn', category: 'Accessoires' },
-          { id: 6, name: 'Câble USB-C', price: 12.99, image: 'https://media.startech.com/cms/products/gallery_large/ucc-3m-10g-usb-cable.main.jpg', category: 'Chargeurs' },
-          { id: 7, name: 'Enceinte Bluetooth', price: 59.99, image: 'https://m.media-amazon.com/images/I/61l6NfpdOwL.jpg', category: 'Audio' },
-          { id: 8, name: 'Support Tablette', price: 24.99, image: 'https://static.fnac-static.com/multimedia/Images/2B/2B/FA/C0/12646955-3-1520-1/tsp20200131011935/UGREEN-Support-Tablette-Telephone-Reglable-Compatible-iPhone-XS-Max-XR-X-8-7-6-Plus-iPad-Pro-iPad-Air-iPad-Mini-Samsung-Tablette-Nintendo-Switch-Blanc.jpg', category: 'Supports' },
-        ],
-        categories: ['Accessoires', 'Chargeurs', 'Audio', 'Supports'],
-        searchQuery: '',
-        selectedCategory: '',
-      };
-    },
-    computed: {
-      filteredProducts() {
-        return this.products.filter((product) => {
-          const matchesSearch = product.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-          const matchesCategory = this.selectedCategory ? product.category === this.selectedCategory : true;
-          return matchesSearch && matchesCategory;
-        });
-      },
-    },
-    methods: {
-      addToCart(product) {
-        alert(`${product.name} a été ajouté au panier !`);
-      },
-      goToContactPage() {
-        this.$router.push('/contact');
-      },
-    },
-  };
-  </script>
 
+    <!-- Section Liste des produits -->
+    <div class="product-grid">
+      <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+        <img :src="product.image" :alt="product.name" class="product-image" />
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-price">{{ product.price }} €</p>
+          <div class="card-buttons">
+            <button @click="addToCart(product)" class="add-to-cart">Ajouter au panier</button>
+            <button @click="viewDetails(product)" class="view-details">Voir les détails</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      products: [
+        { id: 1, name: 'Coque Ultra-Protection', price: 19.99, image: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT1L3_AV2?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1699565910662', category: 'Accessoires' },
+        { id: 2, name: 'Chargeur Rapide', price: 29.99, image: 'https://imgs.search.brave.com/MmenQlAzZmKqYLJFd58g5eCUj9CtO7eV9bTQcbINObU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcGku/YWxsLWJhdHRlcmll/cy5mci9JTlRFUlNI/T1Avc3RhdGljL1dG/Uy9VcGVyZ3ktQWxs/YmF0dGVyaWVzRlIt/U2l0ZS8tL1VwZXJn/eS9mcl9GUi9ML0dD/VjkwNDhfMV9MLmpw/Zw', category: 'Chargeurs' },
+        { id: 3, name: 'Écouteurs Bluetooth', price: 49.99, image: 'https://imgs.search.brave.com/6T56yCgVFEJiP7OO1Nk6gLFr-zhlg9cJSrO4SE7Ip5c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzFUa1hnWGhRbkwu/anBn', category: 'Audio' },
+        { id: 4, name: 'Support Téléphone Voiture', price: 14.99, image: 'https://imgs.search.brave.com/CbwMsjmmGOpoOK0SHwY4L6TEJ36LWqnJ53z2kbEK_OU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFxS1o4a1N1a0wu/anBn', category: 'Supports' },
+        { id: 5, name: 'Kit de Nettoyage', price: 9, image: 'https://imgs.search.brave.com/3lKDcQkRIGvedLnYaD694XE6gQYJFKKJsT2GLx0iLrA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFjWml1YTA1WEwu/anBn', category: 'Accessoires' },
+        { id: 6, name: 'Câble USB-C', price: 12.99, image: 'https://media.startech.com/cms/products/gallery_large/ucc-3m-10g-usb-cable.main.jpg', category: 'Chargeurs' },
+        { id: 7, name: 'Enceinte Bluetooth', price: 59.99, image: 'https://m.media-amazon.com/images/I/61l6NfpdOwL.jpg', category: 'Audio' },
+        { id: 8, name: 'Support Tablette', price: 24.99, image: 'https://static.fnac-static.com/multimedia/Images/2B/2B/FA/C0/12646955-3-1520-1/tsp20200131011935/UGREEN-Support-Tablette-Telephone-Reglable-Compatible-iPhone-XS-Max-XR-X-8-7-6-Plus-iPad-Pro-iPad-Air-iPad-Mini-Samsung-Tablette-Nintendo-Switch-Blanc.jpg', category: 'Supports' },
+      ],
+      categories: ['Accessoires', 'Chargeurs', 'Audio', 'Supports'],
+      searchQuery: '',
+      selectedCategory: '',
+    };
+  },
+  computed: {
+    filteredProducts() {
+      return this.products.filter((product) => {
+        const matchesSearch = product.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesCategory = this.selectedCategory ? product.category === this.selectedCategory : true;
+        return matchesSearch && matchesCategory;
+      });
+    },
+  },
+  methods: {
+    addToCart(product) {
+      alert(`${product.name} a été ajouté au panier !`);
+    },
+    viewDetails(product) {
+      this.$router.push({ name: 'product-detail', params: { productId: product.id } });
+    },
+    goToContactPage() {
+      this.$router.push('/contact');
+    },
+  },
+};
+</script>
 
 <style scoped>
 /* Section Hero */
@@ -199,6 +217,8 @@
   border-radius: 10px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Section Liste des produits */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -208,71 +228,55 @@
   max-width: 1200px;
 }
 
-.product-view {
-  margin-bottom: 5rem;
-}
-
 .product-card {
   border: none;
   border-radius: 15px;
   padding: 1.5rem;
   text-align: center;
-  background: #fff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   transition: all 0.3s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.product-image {
-  width: 100%;
-  height: 150px;
-  object-fit: contain;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+.product-info {
+  margin-top: 1.5rem;
 }
 
 .product-name {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
   color: #333;
 }
 
 .product-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #0d6f51;
-  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: #00b07c;
+  margin: 1rem 0;
 }
 
 .card-buttons {
   display: flex;
-  justify-content: space-between; 
-  gap: 0.8rem; 
-  margin-top: 1rem;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .add-to-cart,
 .view-details {
-  flex: 1; 
-  padding: 0.8rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #00b07c;
-  border: none;
-  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  color: white;
+  border-radius: 50px;
   cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease-in-out;
+}
+
+.add-to-cart {
+  background-color: #00b07c;
 }
 
 .add-to-cart:hover {
@@ -280,11 +284,10 @@
 }
 
 .view-details {
-  background-color: #0a6fdf;
+  background-color: #555;
 }
 
 .view-details:hover {
-  background-color: #005cb8;
+  background-color: #444;
 }
-
 </style>
