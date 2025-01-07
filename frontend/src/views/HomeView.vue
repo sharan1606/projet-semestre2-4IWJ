@@ -1,5 +1,7 @@
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { productService } from '../services/productService';
+import { Product } from '../types/product';
 
 const testimonials = ref([
   {
@@ -18,6 +20,20 @@ const testimonials = ref([
     image: 'https://via.placeholder.com/80',
   },
 ]);
+const featuredProducts = ref([] as Product[]);
+
+// Fonction pour récupérer les produits
+const fetchFeaturedProducts = async () => {
+  try {
+    const allProducts = await productService.getAllProducts();
+    featuredProducts.value = allProducts.slice(0, 4); // Limite à 4 produits pour la section
+  } catch (error) {
+    console.error('Erreur lors de la récupération des produits phares :', error);
+  }
+};
+
+// Récupération des produits lors du montage
+onMounted(fetchFeaturedProducts);
 </script>
 
 <template>
@@ -38,11 +54,13 @@ const testimonials = ref([
     <section class="featured-products">
       <h2>Nos Produits Phares</h2>
       <div class="product-grid">
-        <div class="product-card" v-for="n in 4" :key="n">
-          <img :src="'https://via.placeholder.com/300x200?text=Produit+' + n" :alt="'Produit ' + n" />
-          <h3>Produit {{ n }}</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#" class="btn small">Voir plus</a>
+        <!-- Boucle sur les produits récupérés -->
+        <div class="product-card" v-for="product in featuredProducts" :key="product.idProduct">
+          <img :src="product.image" :alt="product.name" />
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <p class="price">{{ product.price }} €</p>
+          <a :href="`/produits/${product.idProduct}`" class="btn small">Voir plus</a>
         </div>
       </div>
     </section>
@@ -69,6 +87,7 @@ const testimonials = ref([
 </template>
 
 <style scoped>
+/* Styles inchangés */
 /* Section Hero */
 .hero {
   background: linear-gradient(to right, #066F50, #C9CBCF);
@@ -146,6 +165,11 @@ const testimonials = ref([
 .product-card p {
   font-size: 0.9rem;
   color: #666;
+  margin-bottom: 1rem;
+}
+.product-card .price {
+  font-size: 1.1rem;
+  color: #066F50;
   margin-bottom: 1rem;
 }
 .product-card .btn {
