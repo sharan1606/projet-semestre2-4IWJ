@@ -55,11 +55,11 @@ const router = createRouter({
       component: () => import('../views/AdminView.vue')
     },
     // Ajoutez la route pour la gestion des utilisateurs
-    {
-      path: '/admin/users',
-      name: 'users',
-      component: UsersView  // Composant UsersView
-    },
+    // {
+    //   path: '/admin/users',
+    //   name: 'users',
+    //   component: UsersView  // Composant UsersView
+    // },
     {
       path:'/mentions-legales',
       name:'mentions-legales',
