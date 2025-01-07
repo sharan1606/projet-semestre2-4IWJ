@@ -69,14 +69,14 @@
     data() {
       return {
         products: [
-          { id: 1, name: 'Coque Ultra-Protection', price: 19.99, image: 'https://via.placeholder.com/200x200', category: 'Accessoires' },
-          { id: 2, name: 'Chargeur Rapide', price: 29.99, image: 'https://via.placeholder.com/200x200', category: 'Chargeurs' },
-          { id: 3, name: 'Écouteurs Bluetooth', price: 49.99, image: 'https://via.placeholder.com/200x200', category: 'Audio' },
-          { id: 4, name: 'Support Téléphone Voiture', price: 14.99, image: 'https://via.placeholder.com/200x200', category: 'Supports' },
-          { id: 5, name: 'Kit de Nettoyage', price: 9, image: 'https://via.placeholder.com/200x200', category: 'Accessoires' },
-          { id: 6, name: 'Câble USB-C', price: 12.99, image: 'https://via.placeholder.com/200x200', category: 'Chargeurs' },
-          { id: 7, name: 'Enceinte Bluetooth', price: 59.99, image: 'https://via.placeholder.com/200x200', category: 'Audio' },
-          { id: 8, name: 'Support Tablette', price: 24.99, image: 'https://via.placeholder.com/200x200', category: 'Supports' },
+          { id: 1, name: 'Coque Ultra-Protection', price: 19.99, image: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT1L3_AV2?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1699565910662', category: 'Accessoires' },
+          { id: 2, name: 'Chargeur Rapide', price: 29.99, image: 'https://imgs.search.brave.com/MmenQlAzZmKqYLJFd58g5eCUj9CtO7eV9bTQcbINObU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcGku/YWxsLWJhdHRlcmll/cy5mci9JTlRFUlNI/T1Avc3RhdGljL1dG/Uy9VcGVyZ3ktQWxs/YmF0dGVyaWVzRlIt/U2l0ZS8tL1VwZXJn/eS9mcl9GUi9ML0dD/VjkwNDhfMV9MLmpw/Zw', category: 'Chargeurs' },
+          { id: 3, name: 'Écouteurs Bluetooth', price: 49.99, image: 'https://imgs.search.brave.com/6T56yCgVFEJiP7OO1Nk6gLFr-zhlg9cJSrO4SE7Ip5c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzFUa1hnWGhRbkwu/anBn', category: 'Audio' },
+          { id: 4, name: 'Support Téléphone Voiture', price: 14.99, image: 'https://imgs.search.brave.com/CbwMsjmmGOpoOK0SHwY4L6TEJ36LWqnJ53z2kbEK_OU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFxS1o4a1N1a0wu/anBn', category: 'Supports' },
+          { id: 5, name: 'Kit de Nettoyage', price: 9, image: 'https://imgs.search.brave.com/3lKDcQkRIGvedLnYaD694XE6gQYJFKKJsT2GLx0iLrA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFjWml1YTA1WEwu/anBn', category: 'Accessoires' },
+          { id: 6, name: 'Câble USB-C', price: 12.99, image: 'https://media.startech.com/cms/products/gallery_large/ucc-3m-10g-usb-cable.main.jpg', category: 'Chargeurs' },
+          { id: 7, name: 'Enceinte Bluetooth', price: 59.99, image: 'https://m.media-amazon.com/images/I/61l6NfpdOwL.jpg', category: 'Audio' },
+          { id: 8, name: 'Support Tablette', price: 24.99, image: 'https://static.fnac-static.com/multimedia/Images/2B/2B/FA/C0/12646955-3-1520-1/tsp20200131011935/UGREEN-Support-Tablette-Telephone-Reglable-Compatible-iPhone-XS-Max-XR-X-8-7-6-Plus-iPad-Pro-iPad-Air-iPad-Mini-Samsung-Tablette-Nintendo-Switch-Blanc.jpg', category: 'Supports' },
         ],
         categories: ['Accessoires', 'Chargeurs', 'Audio', 'Supports'],
         searchQuery: '',
