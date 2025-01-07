@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { productService } from '../services/productService';
@@ -20,20 +21,6 @@ const testimonials = ref([
     image: 'https://via.placeholder.com/80',
   },
 ]);
-const featuredProducts = ref([] as Product[]);
-
-// Fonction pour récupérer les produits
-const fetchFeaturedProducts = async () => {
-  try {
-    const allProducts = await productService.getAllProducts();
-    featuredProducts.value = allProducts.slice(0, 4); // Limite à 4 produits pour la section
-  } catch (error) {
-    console.error('Erreur lors de la récupération des produits phares :', error);
-  }
-};
-
-// Récupération des produits lors du montage
-onMounted(fetchFeaturedProducts);
 </script>
 
 <template>
