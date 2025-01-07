@@ -102,12 +102,11 @@ const router = createRouter({
         component: ProductDetailsView,
         props: true,
       },
-
-    // {
-    //   path: "/forgot-password",
-    //   name: "ForgotPassword",
-    //   component: ForgotPasswordView,
-    // }
+      {
+      path: "/forgot-password",
+      name: "ForgotPassword",
+      component: () => import("../views/ForgotPasswordView.vue"),
+    }
   ]
 })
 

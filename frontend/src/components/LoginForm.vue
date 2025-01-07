@@ -18,7 +18,7 @@
       :error="passwordError"
     />
     <SubmitButton :label="'Se connecter'" :disabled="!isFormValid" />
-    <a @click.prevent="goToForgotPassword" class="forgot-password-link">Mot de passe oublié ?</a>
+    <a href="/forgot-password" class="forgot-password-link">Mot de passe oublié ?</a>
   </form>
 </template>
 
@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .login-form {
   max-width: 400px;
   margin: 2rem auto;
