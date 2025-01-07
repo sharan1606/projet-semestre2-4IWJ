@@ -3,21 +3,24 @@ import { ref, onMounted } from 'vue';
 import { productService } from '../services/productService';
 import { Product } from '../types/product';
 
+//Recuperer les produits de la base de données dynamiquement
+
+
 const testimonials = ref([
   {
     name: 'Alice Dupont',
     review: 'Super expérience ! Les produits sont de qualité et le service est impeccable.',
-    image: 'https://via.placeholder.com/80',
+    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231019.png',
   },
   {
     name: 'Jean Martin',
     review: 'Commande facile et livraison rapide. Je recommande fortement !',
-    image: 'https://via.placeholder.com/80',
+    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231020.png',
   },
   {
     name: 'Sophie Durand',
     review: 'Un site vraiment moderne et des produits innovants.',
-    image: 'https://via.placeholder.com/80',
+    image: 'https://cdn-icons-png.flaticon.com/512/5231/5231019.png',
   },
 ]);
 const featuredProducts = ref([] as Product[]);
