@@ -99,7 +99,7 @@ export default {
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: '0.00',  // Montant de la commande
+                  value: '0.01',  // Montant de la commande
                 },
               }],
             });
@@ -274,6 +274,16 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+#paypal-button-container {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
 }
 
 .continue-shopping-btn,
