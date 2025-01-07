@@ -156,7 +156,7 @@ export default {
       if (this.isFormValid) {
         this.registerError = "";
         // Envoi des données à l'API
-        fetch("http://localhost:5000/api/auth/register", {
+        fetch("http://152.42.132.157:5000/api/auth/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

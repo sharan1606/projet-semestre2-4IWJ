@@ -89,7 +89,7 @@ export default {
 
     // Méthode pour récupérer les utilisateurs depuis l'API
     fetchUsers() {
-      axios.get('http://localhost:3000/api/users', {
+      axios.get('http://152.42.132.157:5000/api/users', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}` // Ajouter le token JWT dans l'en-tête
         }

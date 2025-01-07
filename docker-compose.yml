@@ -2,11 +2,7 @@ services:
   backend:
     build: ./backend
     ports:
-<<<<<<< HEAD
-      - "5001:5000"
-=======
       - "5000:5000"
->>>>>>> origin/Develop
     environment:
       PORT: 5000
     depends_on:
