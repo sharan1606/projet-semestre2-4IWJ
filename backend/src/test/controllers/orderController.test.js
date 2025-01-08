@@ -1,11 +1,11 @@
-const orderController = require('../../dist/controllers/orderController');
-const Order = require('../../models/orderModel');
+import orderController from '../../../src/controllers/orderController';
+import Order from '../../../src/models/orderModel';
 
-jest.mock('../../models/orderModel');
+jest.mock('../../../src/models/orderModel');
 
-describe('orderController Unit Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
+describe('Order Controller', () => {
+    afterEach(() => {
+        jest.clearAllMocks(); 
     });
 
     describe('createOrder', () => {
