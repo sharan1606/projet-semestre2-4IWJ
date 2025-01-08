@@ -1,7 +1,7 @@
 const productController = require('../../dist/controllers/productController');
-const Product = require('../../models/Product');
+const Product = require('../../models/productModel');
 
-jest.mock('../../models/Product'); 
+jest.mock('../../models/productModel'); 
 
 describe('Product Controller', () => {
     afterEach(() => {
