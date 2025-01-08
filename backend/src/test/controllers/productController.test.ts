@@ -1,16 +1,26 @@
 import request from 'supertest';
-import { app } from '../app'; // Supposons que votre serveur Express est dans `app.ts`
-import Product from '../models/productModel';
-import { IProduct } from '../models/productModel';
+import { app } from '../../server'; // Le fichier app.ts où votre serveur Express est configuré
+import Product from '../../models/productModel';
+import { IProduct } from '../../models/productModel';
 
-// Nous mockons mongoose et les méthodes liées à Product
-jest.mock('../models/productModel'); // Ceci va mocker toute la classe Product
+// Mock de la méthode Product pour simuler la base de données
+jest.mock('../../models/productModel'); // Mock de la classe Product
 
 describe('Product Controller Tests', () => {
   let mockProduct: IProduct;
 
+  beforeAll(() => {
+    // Configuration de votre base de données si nécessaire
+    // mongoose.connect('mongodb://127.0.0.1/product_test', { useNewUrlParser: true, useUnifiedTopology: true });
+  });
+
+  afterAll(async () => {
+    // Fermer la connexion si nécessaire
+    // await mongoose.connection.close();
+  });
+
   beforeEach(() => {
-    // Initialisation d'un produit fictif
+    // Initialisation d'un produit fictif avant chaque test
     mockProduct = {
       idProduct: '1',
       name: 'Test Product',
@@ -21,27 +31,25 @@ describe('Product Controller Tests', () => {
       category: 'TestCategory',
       image: 'test-image.jpg',
       date_add: new Date(),
-    } as unknown as IProduct;
+    } as IProduct;
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // Réinitialise les mocks après chaque test
+    jest.clearAllMocks(); // Réinitialiser les mocks après chaque test
   });
 
   it('should fetch all products successfully', async () => {
-    // Mock de la méthode find() de Product
-    (Product.find as jest.Mock).mockResolvedValue([mockProduct]);
+    (Product.find as jest.Mock).mockResolvedValue([mockProduct]); // Mock de la méthode find() de Product
 
     const response = await request(app).get('/api/products'); // En supposant que cette route existe
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1); // Nous avons mocké un produit
+    expect(response.body).toHaveLength(1); // Un produit a été mocké
     expect(response.body[0].name).toBe(mockProduct.name);
   });
 
   it('should fetch a product by ID successfully', async () => {
-    // Mock de la méthode findOne()
-    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct);
+    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct); // Mock de la méthode findOne()
 
     const response = await request(app).get(`/api/products/${mockProduct.idProduct}`);
 
@@ -50,8 +58,7 @@ describe('Product Controller Tests', () => {
   });
 
   it('should return 404 if product not found', async () => {
-    // Mock de la méthode findOne()
-    (Product.findOne as jest.Mock).mockResolvedValue(null);
+    (Product.findOne as jest.Mock).mockResolvedValue(null); // Mock pour simuler un produit non trouvé
 
     const response = await request(app).get(`/api/products/invalid-id`);
 
@@ -60,8 +67,7 @@ describe('Product Controller Tests', () => {
   });
 
   it('should create a product successfully', async () => {
-    // Mock de la méthode save()
-    (Product.prototype.save as jest.Mock).mockResolvedValue(mockProduct);
+    (Product.prototype.save as jest.Mock).mockResolvedValue(mockProduct); // Mock de la méthode save()
 
     const response = await request(app)
       .post('/api/products')
@@ -80,8 +86,7 @@ describe('Product Controller Tests', () => {
   });
 
   it('should return 500 if product creation fails', async () => {
-    // Mock pour simuler une erreur lors de la sauvegarde
-    (Product.prototype.save as jest.Mock).mockRejectedValue(new Error('Error'));
+    (Product.prototype.save as jest.Mock).mockRejectedValue(new Error('Error')); // Mock pour simuler une erreur
 
     const response = await request(app)
       .post('/api/products')
@@ -100,9 +105,8 @@ describe('Product Controller Tests', () => {
   });
 
   it('should update a product successfully', async () => {
-    // Mock pour findOne et save
-    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct);
-    (Product.prototype.save as jest.Mock).mockResolvedValue(mockProduct);
+    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct); // Mock pour findOne
+    (Product.prototype.save as jest.Mock).mockResolvedValue(mockProduct); // Mock pour save()
 
     const response = await request(app)
       .put(`/api/products/${mockProduct.idProduct}`)
@@ -118,8 +122,7 @@ describe('Product Controller Tests', () => {
   });
 
   it('should return 404 if product to update not found', async () => {
-    // Mock pour simuler un produit non trouvé
-    (Product.findOne as jest.Mock).mockResolvedValue(null);
+    (Product.findOne as jest.Mock).mockResolvedValue(null); // Mock pour simuler un produit non trouvé
 
     const response = await request(app)
       .put(`/api/products/invalid-id`)
@@ -132,9 +135,8 @@ describe('Product Controller Tests', () => {
   });
 
   it('should delete a product successfully', async () => {
-    // Mock pour findOne et deleteOne
-    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct);
-    (Product.deleteOne as jest.Mock).mockResolvedValue({ deletedCount: 1 });
+    (Product.findOne as jest.Mock).mockResolvedValue(mockProduct); // Mock pour findOne
+    (Product.deleteOne as jest.Mock).mockResolvedValue({ deletedCount: 1 }); // Mock pour deleteOne
 
     const response = await request(app).delete(`/api/products/${mockProduct.idProduct}`);
 
@@ -143,8 +145,7 @@ describe('Product Controller Tests', () => {
   });
 
   it('should return 404 if product to delete not found', async () => {
-    // Mock pour simuler un produit non trouvé
-    (Product.findOne as jest.Mock).mockResolvedValue(null);
+    (Product.findOne as jest.Mock).mockResolvedValue(null); // Mock pour simuler un produit non trouvé
 
     const response = await request(app).delete(`/api/products/invalid-id`);
 

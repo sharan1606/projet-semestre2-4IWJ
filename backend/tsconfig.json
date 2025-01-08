@@ -7,8 +7,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./@types"] // Inclut les types personnalisés
+    "typeRoots": ["./node_modules/@types", "./@types"],
+    "baseUrl": "src",  // Indique que la racine de l'importation se trouve dans le dossier src
+    "paths": {
+      "*": ["node_modules/*", "src/*"]  // Permet de résoudre les modules dans src
+    }
   },
-  "include": ["src/**/*", "@types"], // Prend en compte `@types` dans la compilation
+  "include": ["src/**/*", "@types"],
   "exclude": ["node_modules"]
 }
