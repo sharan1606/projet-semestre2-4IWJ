@@ -19,6 +19,6 @@ npm-debug.log*
 .vscode/
 *.swp
 
-# Package lock file
+# Package files
 package-lock.json
 package.json
