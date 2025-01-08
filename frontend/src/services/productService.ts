@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Product } from '../types/product';
 
-const API_URL = 'http://localhost:5000/api/products';
+const API_URL = 'http://152.42.132.157:5000/api/products';
 
 export const productService = {
   async getAllProducts(): Promise<Product[]> {

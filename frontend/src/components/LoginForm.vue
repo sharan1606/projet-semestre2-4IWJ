@@ -60,7 +60,7 @@ export default {
 
       try {
         // Requête POST au backend
-        const response = await fetch("http://localhost:5000/api/auth/login", {
+        const response = await fetch("http://152.42.132.157:5000/api/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -155,19 +155,8 @@ export default {
     async submitForm() {
       if (this.isFormValid) {
         this.registerError = "";
-        await this.registerUser(
-          this.lastName,
-          this.firstName,
-          this.address,
-          this.phone,
-          this.email,
-          this.password
-        );
-      }
-    },
-    async registerUser(lastName, firstName, address, phone, email, password) {
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/register", {
+        // Envoi des données à l'API
+        fetch("http://localhost:5000/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
