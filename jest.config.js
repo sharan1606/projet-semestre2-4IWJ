@@ -1,18 +1,14 @@
 module.exports = {
-    preset: 'ts-jest',
-    transform: {
-      '^.+\\.(ts|tsx)$': 'ts-jest',
-      '^.+\\.(js|jsx)$': 'babel-jest',
+  preset: 'ts-jest', // Utilise ts-jest pour les transformations de TypeScript
+  testEnvironment: 'node', // Spécifie l'environnement d'exécution (node)
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest', // Transforms les fichiers TypeScript
+  },
+  testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'], // Recherche les fichiers de test (.ts ou .tsx)
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'json'], // Extensions de fichiers à gérer
+  globals: {
+    'ts-jest': {
+      isolatedModules: true, // Optimisation pour les modules isolés
     },
-    testEnvironment: 'node',
-    moduleFileExtensions: ['js', 'ts', 'tsx'],
-    transformIgnorePatterns: [
-      '/node_modules/(?!(@babel|your-module-name))',  // Ne pas ignorer certains modules dans node_modules
-    ],
-    globals: {
-      'ts-jest': {
-        useBabelrc: true, // Utilisation du fichier .babelrc pour la configuration
-      },
-    },
-  };
-  
+  },
+};

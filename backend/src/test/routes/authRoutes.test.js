@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../../server');
+const app = require('../../../dist/server');
 const authController = require('../controllers/authController');
 jest.mock('../controllers/authController'); 
 
