@@ -1,152 +1,246 @@
-// Compiler le controller TypeScript en JS avant les tests
-require('@babel/register')({
-  extensions: ['.js', '.ts'],
-  presets: ['@babel/preset-typescript']
-});
+const Cart = require("../../../dist/models/cartModel").default;
+const Product = require("../../../dist/models/productModel").default;
+const cartController = require("../../../dist/controllers/cartController");
 
-const cartController = require('../../controllers/cartController');
-const Cart = require('../../models/cartModel');
-const Product = require('../../models/productModel');
+jest.mock("../../../dist/models/cartModel");
+jest.mock("../../../dist/models/productModel");
 
-// Mock des modèles
-jest.mock('../../models/cartModel', () => ({
-  findOne: jest.fn()
-}));
-
-jest.mock('../../models/productModel', () => ({
-  findOne: jest.fn()
-}));
-
-describe('Cart Controller Tests', () => {
+describe("Cart Controller", () => {
   let mockRequest;
   let mockResponse;
-  let responseObject;
 
   beforeEach(() => {
-    responseObject = {
-      statusCode: 0,
-      jsonValue: null
+    mockRequest = {
+      params: {},
+      body: {},
     };
-    
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockImplementation((result) => {
-        responseObject.jsonValue = result;
-      })
+      json: jest.fn(),
     };
-    
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('addToCart', () => {
-    it('should add a new item to cart successfully', async () => {
-      const mockProduct = {
-        idProduct: '123',
-        price: 10
-      };
+describe("addToCart", () => {
+    it("should add a product to the cart", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 };
+
+      const mockProduct = { idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", price: 50 };
+      Product.findOne.mockResolvedValue(mockProduct);
 
       const mockCart = {
-        idUser: 'user123',
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
         items: [],
         total: 0,
-        save: jest.fn().mockResolvedValue(true)
+        save: jest.fn().mockResolvedValue(true),
       };
-
-      Product.findOne.mockResolvedValue(mockProduct);
-      Cart.findOne.mockResolvedValue(mockCart);
-
-      mockRequest = {
-        body: {
-          idUser: 'user123',
-          idProduct: '123',
-          quantity: 2
-        }
-      };
+      Cart.findOne.mockResolvedValue(null);
+      Cart.mockImplementation(() => mockCart);
 
       await cartController.addToCart(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: 'user123' });
+      expect(Product.findOne).toHaveBeenCalledWith({ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" });
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
       expect(mockCart.save).toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(mockCart);
+    });
+
+    it("should return 404 if product is not found", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 };
+
+      Product.findOne.mockResolvedValue(null);
+
+      await cartController.addToCart(mockRequest, mockResponse);
+
+      expect(Product.findOne).toHaveBeenCalledWith({ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" });
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Produit non trouvé." });
+    });
+
+    it("should return 500 on server error", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 };
+
+      Product.findOne.mockRejectedValue(new Error("Database error"));
+
+      await cartController.addToCart(mockRequest, mockResponse);
+
+      expect(Product.findOne).toHaveBeenCalledWith({ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" });
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: "Erreur serveur",
+        error: expect.any(Error),
+      });
     });
   });
 
-  describe('getCart', () => {
-    it('should get cart with populated items', async () => {
+describe("getCart", () => {
+    it("should return the cart with populated items", async () => {
+      mockRequest.params = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" };
+
       const mockCart = {
-        idUser: 'user123',
-        items: [{ idProduct: '123', quantity: 2 }],
-        total: 20
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
+        items: [
+          { idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 },
+        ],
+        total: 100,
       };
 
-      const mockProduct = {
-        idProduct: '123',
-        name: 'Test Product',
-        price: 10,
-        image: 'test.jpg'
-      };
+      const mockProduct = { idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", name: "Product 1", price: 50, image: "product1.jpg" };
 
       Cart.findOne.mockResolvedValue(mockCart);
       Product.findOne.mockResolvedValue(mockProduct);
 
-      mockRequest = {
-        params: { idUser: 'user123' }
-      };
+      await cartController.getCart(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(Product.findOne).toHaveBeenCalledWith({ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" });
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
+        items: [
+          {
+            idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949",
+            quantity: 2,
+            name: "Product 1",
+            price: 50,
+            image: "product1.jpg",
+          },
+        ],
+        total: 100,
+      });
+    });
+
+    it("should return 404 if cart is not found", async () => {
+      mockRequest.params = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" };
+
+      Cart.findOne.mockResolvedValue(null);
 
       await cartController.getCart(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(responseObject.jsonValue.items[0]).toHaveProperty('name', 'Test Product');
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Panier non trouvé." });
+    });
+
+    it("should return 500 on server error", async () => {
+      mockRequest.params = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" };
+
+      Cart.findOne.mockRejectedValue(new Error("Database error"));
+
+      await cartController.getCart(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: "Erreur serveur",
+        error: expect.any(Error),
+      });
     });
   });
 
-  describe('updateCartItem', () => {
-    it('should update item quantity', async () => {
+describe("updateCartItem", () => {
+    it("should update the quantity of an item in the cart", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 3 };
+
       const mockCart = {
-        idUser: 'user123',
-        items: [{ idProduct: '123', quantity: 1 }],
-        total: 10,
-        save: jest.fn().mockResolvedValue(true)
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
+        items: [{ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 }],
+        save: jest.fn().mockResolvedValue(true),
       };
+
+      const mockProduct = { idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", price: 50 };
 
       Cart.findOne.mockResolvedValue(mockCart);
-      Product.findOne.mockResolvedValue({ price: 10 });
-
-      mockRequest = {
-        body: {
-          idUser: 'user123',
-          idProduct: '123',
-          quantity: 2
-        }
-      };
+      Product.findOne.mockResolvedValue(mockProduct);
 
       await cartController.updateCartItem(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
       expect(mockCart.save).toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(mockCart);
+    });
+
+    it("should return 404 if cart is not found", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 3 };
+
+      Cart.findOne.mockResolvedValue(null);
+
+      await cartController.updateCartItem(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Panier non trouvé." });
     });
   });
 
-  describe('clearCart', () => {
-    it('should clear cart successfully', async () => {
+describe("removeFromCart", () => {
+    it("should remove an item from the cart", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" };
+
       const mockCart = {
-        idUser: 'user123',
-        items: [{ idProduct: '123', quantity: 1 }],
-        total: 10,
-        save: jest.fn().mockResolvedValue(true)
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
+        items: [{ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 }],
+        save: jest.fn().mockResolvedValue(true),
       };
 
       Cart.findOne.mockResolvedValue(mockCart);
 
-      mockRequest = {
-        params: { idUser: 'user123' }
+      await cartController.removeFromCart(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockCart.save).toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(mockCart);
+    });
+
+    it("should return 404 if cart is not found", async () => {
+      mockRequest.body = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2", idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949" };
+
+      Cart.findOne.mockResolvedValue(null);
+
+      await cartController.removeFromCart(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Panier non trouvé." });
+    });
+  });
+
+describe("clearCart", () => {
+    it("should clear all items in the cart", async () => {
+      mockRequest.params = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" };
+
+      const mockCart = {
+        idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2",
+        items: [{ idProduct: "cbb1d8b3-9f59-40f5-aa42-83ffdbca5949", quantity: 2 }],
+        save: jest.fn().mockResolvedValue(true),
       };
+
+      Cart.findOne.mockResolvedValue(mockCart);
 
       await cartController.clearCart(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(responseObject.jsonValue.message).toBe('Panier vidé avec succès.');
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
       expect(mockCart.save).toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Panier vidé avec succès." });
+    });
+
+    it("should return 404 if cart is not found", async () => {
+      mockRequest.params = { idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" };
+
+      Cart.findOne.mockResolvedValue(null);
+
+      await cartController.clearCart(mockRequest, mockResponse);
+
+      expect(Cart.findOne).toHaveBeenCalledWith({ idUser: "8ac556e4-b9c7-458f-a402-12119cbbceb2" });
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Panier non trouvé." });
     });
   });
 });

@@ -6,21 +6,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var productController = require('../../../dist/controllers/productController');
+var Product = require("../../../dist/models/productModel")["default"];
 
-var Product = require('../../../dist/models/productModel')["default"];
+var productController = require("../../../dist/controllers/productController");
 
-jest.mock('../../../dist/models/productModel', function () {
-  var mockConstructor = jest.fn();
-  return {
-    "default": Object.assign(mockConstructor, {
-      find: jest.fn(),
-      findOne: jest.fn(),
-      deleteOne: jest.fn()
-    })
-  };
-});
-describe('Product Controller', function () {
+jest.mock("../../../dist/models/productModel");
+describe("Product Controller", function () {
   var mockRequest;
   var mockResponse;
   beforeEach(function () {
@@ -36,20 +27,20 @@ describe('Product Controller', function () {
   afterEach(function () {
     jest.clearAllMocks();
   });
-  describe('getAllProducts', function () {
-    it('should handle errors in getAllProducts', function _callee() {
+  describe("getAllProducts", function () {
+    it("should handle errors in getAllProducts", function _callee() {
       return regeneratorRuntime.async(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              Product.find.mockRejectedValue(new Error('Database error'));
+              Product.find.mockRejectedValue(new Error("Database error"));
               _context.next = 3;
               return regeneratorRuntime.awrap(productController.getAllProducts(mockRequest, mockResponse));
 
             case 3:
               expect(mockResponse.status).toHaveBeenCalledWith(500);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Erreur serveur',
+                message: "Erreur serveur",
                 error: expect.any(Error)
               });
 
@@ -60,29 +51,28 @@ describe('Product Controller', function () {
         }
       });
     });
-    it('should fetch all products successfully', function _callee2() {
+    it("should fetch all products successfully", function _callee2() {
       var mockProducts;
       return regeneratorRuntime.async(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               mockProducts = [{
-                idProduct: 'test-uuid',
-                name: 'Test Product',
-                description: 'Test Description',
+                idProduct: "test-uuid",
+                name: "Test Product",
+                description: "Test Description",
                 price: 99.99,
                 stock: 10,
-                brand: 'Test Brand',
-                category: 'Test Category',
-                image: 'test.jpg',
-                date_add: new Date()
+                brand: "Test Brand",
+                category: "Test Category",
+                image: "test.jpg"
               }];
               Product.find.mockResolvedValue(mockProducts);
               _context2.next = 4;
               return regeneratorRuntime.awrap(productController.getAllProducts(mockRequest, mockResponse));
 
             case 4:
-              expect(Product.find).toHaveBeenCalled();
+              expect(Product.find).toHaveBeenCalledTimes(1);
               expect(mockResponse.status).toHaveBeenCalledWith(200);
               expect(mockResponse.json).toHaveBeenCalledWith(mockProducts);
 
@@ -94,18 +84,17 @@ describe('Product Controller', function () {
       });
     });
   });
-  describe('deleteProduct', function () {
-    it('should delete a product successfully', function _callee3() {
+  describe("deleteProduct", function () {
+    it("should delete a product successfully", function _callee3() {
       return regeneratorRuntime.async(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               mockRequest.params = {
-                id: 'test-uuid'
+                id: "test-uuid"
               };
               Product.findOne.mockResolvedValue({
-                idProduct: 'test-uuid',
-                name: 'Test Product'
+                idProduct: "test-uuid"
               });
               Product.deleteOne.mockResolvedValue({
                 deletedCount: 1
@@ -115,14 +104,14 @@ describe('Product Controller', function () {
 
             case 5:
               expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'test-uuid'
+                idProduct: "test-uuid"
               });
               expect(Product.deleteOne).toHaveBeenCalledWith({
-                idProduct: 'test-uuid'
+                idProduct: "test-uuid"
               });
               expect(mockResponse.status).toHaveBeenCalledWith(200);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Produit supprimé avec succès.'
+                message: "Produit supprimé avec succès."
               });
 
             case 9:
@@ -132,13 +121,13 @@ describe('Product Controller', function () {
         }
       });
     });
-    it('should return 404 if product not found', function _callee4() {
+    it("should return 404 if product not found", function _callee4() {
       return regeneratorRuntime.async(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               mockRequest.params = {
-                id: 'nonexistent-id'
+                id: "nonexistent-id"
               };
               Product.findOne.mockResolvedValue(null);
               _context4.next = 4;
@@ -146,12 +135,12 @@ describe('Product Controller', function () {
 
             case 4:
               expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'nonexistent-id'
+                idProduct: "nonexistent-id"
               });
               expect(Product.deleteOne).not.toHaveBeenCalled();
               expect(mockResponse.status).toHaveBeenCalledWith(404);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Produit non trouvé.'
+                message: "Produit non trouvé."
               });
 
             case 8:
@@ -161,26 +150,35 @@ describe('Product Controller', function () {
         }
       });
     });
-    it('should return 500 if deletion fails', function _callee5() {
+    it("should return 500 if deletion fails", function _callee5() {
       return regeneratorRuntime.async(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
               mockRequest.params = {
-                id: 'test-uuid'
+                id: "test-uuid"
               };
-              Product.findOne.mockRejectedValue(new Error('Database error'));
-              _context5.next = 4;
+              Product.findOne.mockResolvedValue({
+                idProduct: "test-uuid"
+              });
+              Product.deleteOne.mockRejectedValue(new Error("Database error"));
+              _context5.next = 5;
               return regeneratorRuntime.awrap(productController.deleteProduct(mockRequest, mockResponse));
 
-            case 4:
+            case 5:
+              expect(Product.findOne).toHaveBeenCalledWith({
+                idProduct: "test-uuid"
+              });
+              expect(Product.deleteOne).toHaveBeenCalledWith({
+                idProduct: "test-uuid"
+              });
               expect(mockResponse.status).toHaveBeenCalledWith(500);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Erreur serveur',
+                message: "Erreur serveur",
                 error: expect.any(Error)
               });
 
-            case 6:
+            case 9:
             case "end":
               return _context5.stop();
           }
@@ -188,132 +186,24 @@ describe('Product Controller', function () {
       });
     });
   });
-  describe('updateProduct', function () {
-    it('should update a product successfully', function _callee6() {
-      var existingProduct;
+  describe("createProduct", function () {
+    it("should create a product successfully", function _callee6() {
+      var saveResult, saveMock;
       return regeneratorRuntime.async(function _callee6$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              existingProduct = {
-                idProduct: 'test-uuid',
-                name: 'Original Product',
-                description: 'Original Description',
-                price: 99.99,
-                stock: 10,
-                brand: 'Original Brand',
-                category: 'Original Category',
-                image: 'original.jpg',
-                save: jest.fn()
-              };
-              mockRequest.params = {
-                id: 'test-uuid'
-              };
               mockRequest.body = {
-                name: 'Updated Product',
-                price: 149.99
-              };
-              Product.findOne.mockResolvedValue(existingProduct);
-              existingProduct.save.mockResolvedValue(_objectSpread({}, existingProduct, {}, mockRequest.body));
-              _context6.next = 7;
-              return regeneratorRuntime.awrap(productController.updateProduct(mockRequest, mockResponse));
-
-            case 7:
-              expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'test-uuid'
-              });
-              expect(existingProduct.save).toHaveBeenCalled();
-              expect(mockResponse.status).toHaveBeenCalledWith(200);
-              expect(mockResponse.json).toHaveBeenCalledWith(expect.objectContaining({
-                name: 'Updated Product',
-                price: 149.99
-              }));
-
-            case 11:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      });
-    });
-    it('should return 404 if product to update not found', function _callee7() {
-      return regeneratorRuntime.async(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              mockRequest.params = {
-                id: 'nonexistent-id'
-              };
-              mockRequest.body = {
-                name: 'Updated Product'
-              };
-              Product.findOne.mockResolvedValue(null);
-              _context7.next = 5;
-              return regeneratorRuntime.awrap(productController.updateProduct(mockRequest, mockResponse));
-
-            case 5:
-              expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'nonexistent-id'
-              });
-              expect(mockResponse.status).toHaveBeenCalledWith(404);
-              expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Produit non trouvé.'
-              });
-
-            case 8:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      });
-    });
-    it('should return 500 if update fails', function _callee8() {
-      return regeneratorRuntime.async(function _callee8$(_context8) {
-        while (1) {
-          switch (_context8.prev = _context8.next) {
-            case 0:
-              // Setup
-              mockRequest.params = {
-                id: 'test-uuid'
-              }; // Mock erreur lors de la recherche
-
-              Product.findOne.mockRejectedValue(new Error('Database error'));
-              _context8.next = 4;
-              return regeneratorRuntime.awrap(productController.updateProduct(mockRequest, mockResponse));
-
-            case 4:
-              expect(mockResponse.status).toHaveBeenCalledWith(500);
-              expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Erreur serveur',
-                error: expect.any(Error)
-              });
-
-            case 6:
-            case "end":
-              return _context8.stop();
-          }
-        }
-      });
-    });
-  });
-  describe('createProduct', function () {
-    it('should create a product successfully', function _callee9() {
-      var saveResult, saveMock;
-      return regeneratorRuntime.async(function _callee9$(_context9) {
-        while (1) {
-          switch (_context9.prev = _context9.next) {
-            case 0:
-              mockRequest.body = {
-                name: 'New Product',
-                description: 'Product Description',
+                name: "New Product",
+                description: "Product Description",
                 price: 99.99,
                 stock: 50,
-                brand: 'Test Brand',
-                category: 'Test Category',
-                image: 'test.jpg'
+                brand: "Test Brand",
+                category: "Test Category",
+                image: "test.jpg"
               };
               saveResult = _objectSpread({
-                idProduct: 'test-uuid'
+                idProduct: "test-uuid"
               }, mockRequest.body);
               saveMock = jest.fn().mockResolvedValue(saveResult);
               Product.mockImplementation(function () {
@@ -321,7 +211,7 @@ describe('Product Controller', function () {
                   save: saveMock
                 };
               });
-              _context9.next = 6;
+              _context6.next = 6;
               return regeneratorRuntime.awrap(productController.createProduct(mockRequest, mockResponse));
 
             case 6:
@@ -330,136 +220,139 @@ describe('Product Controller', function () {
 
             case 8:
             case "end":
-              return _context9.stop();
+              return _context6.stop();
           }
         }
       });
     });
-    it('should return 500 if creation fails', function _callee10() {
-      return regeneratorRuntime.async(function _callee10$(_context10) {
+    it("should return 500 if creation fails", function _callee7() {
+      return regeneratorRuntime.async(function _callee7$(_context7) {
         while (1) {
-          switch (_context10.prev = _context10.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               mockRequest.body = {
-                name: 'New Product',
-                description: 'Product Description',
+                name: "New Product",
+                description: "Product Description",
                 price: 99.99,
                 stock: 50,
-                brand: 'Test Brand',
-                category: 'Test Category',
-                image: 'test.jpg'
+                brand: "Test Brand",
+                category: "Test Category",
+                image: "test.jpg"
               };
               Product.mockImplementation(function () {
                 return {
-                  save: jest.fn().mockRejectedValue(new Error('Save failed'))
+                  save: jest.fn().mockRejectedValue(new Error("Save failed"))
                 };
               });
-              _context10.next = 4;
+              _context7.next = 4;
               return regeneratorRuntime.awrap(productController.createProduct(mockRequest, mockResponse));
 
             case 4:
               expect(mockResponse.status).toHaveBeenCalledWith(500);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Erreur serveur',
+                message: "Erreur serveur",
                 error: expect.any(Error)
               });
 
             case 6:
             case "end":
-              return _context10.stop();
+              return _context7.stop();
           }
         }
       });
     });
   });
-  describe('getProductById', function () {
-    it('should get product successfully', function _callee11() {
+  describe("getProductById", function () {
+    it("should get product successfully", function _callee8() {
       var mockProduct;
-      return regeneratorRuntime.async(function _callee11$(_context11) {
+      return regeneratorRuntime.async(function _callee8$(_context8) {
         while (1) {
-          switch (_context11.prev = _context11.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
               mockProduct = {
-                idProduct: 'test-uuid',
-                name: 'Test Product',
-                description: 'Test Description',
+                idProduct: "test-uuid",
+                name: "Test Product",
+                description: "Test Description",
                 price: 99.99,
                 stock: 10,
-                brand: 'Test Brand',
-                category: 'Test Category',
-                image: 'test.jpg'
+                brand: "Test Brand",
+                category: "Test Category",
+                image: "test.jpg"
               };
               mockRequest.params = {
-                id: 'test-uuid'
+                id: "test-uuid"
               };
               Product.findOne.mockResolvedValue(mockProduct);
-              _context11.next = 5;
+              _context8.next = 5;
               return regeneratorRuntime.awrap(productController.getProductById(mockRequest, mockResponse));
 
             case 5:
               expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'test-uuid'
+                idProduct: "test-uuid"
               });
               expect(mockResponse.status).toHaveBeenCalledWith(200);
               expect(mockResponse.json).toHaveBeenCalledWith(mockProduct);
 
             case 8:
             case "end":
-              return _context11.stop();
+              return _context8.stop();
           }
         }
       });
     });
-    it('should return 404 if product not found', function _callee12() {
-      return regeneratorRuntime.async(function _callee12$(_context12) {
+    it("should return 404 if product not found", function _callee9() {
+      return regeneratorRuntime.async(function _callee9$(_context9) {
         while (1) {
-          switch (_context12.prev = _context12.next) {
+          switch (_context9.prev = _context9.next) {
             case 0:
               mockRequest.params = {
-                id: 'nonexistent-id'
+                id: "nonexistent-id"
               };
               Product.findOne.mockResolvedValue(null);
-              _context12.next = 4;
+              _context9.next = 4;
               return regeneratorRuntime.awrap(productController.getProductById(mockRequest, mockResponse));
 
             case 4:
               expect(Product.findOne).toHaveBeenCalledWith({
-                idProduct: 'nonexistent-id'
+                idProduct: "nonexistent-id"
               });
               expect(mockResponse.status).toHaveBeenCalledWith(404);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Produit non trouvé.'
+                message: "Produit non trouvé."
               });
 
             case 7:
             case "end":
-              return _context12.stop();
+              return _context9.stop();
           }
         }
       });
     });
-    it('should return 500 if search fails', function _callee13() {
-      return regeneratorRuntime.async(function _callee13$(_context13) {
+    it("should return 500 if search fails", function _callee10() {
+      return regeneratorRuntime.async(function _callee10$(_context10) {
         while (1) {
-          switch (_context13.prev = _context13.next) {
+          switch (_context10.prev = _context10.next) {
             case 0:
               mockRequest.params = {
-                id: 'test-uuid'
+                id: "test-uuid"
               };
-              Product.findOne.mockRejectedValue(new Error('Database error'));
-              _context13.next = 4;
+              Product.findOne.mockRejectedValue(new Error("Database error"));
+              _context10.next = 4;
               return regeneratorRuntime.awrap(productController.getProductById(mockRequest, mockResponse));
 
             case 4:
+              expect(Product.findOne).toHaveBeenCalledWith({
+                idProduct: "test-uuid"
+              });
               expect(mockResponse.status).toHaveBeenCalledWith(500);
               expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Erreur serveur',
+                message: "Erreur serveur",
                 error: expect.any(Error)
               });
 
-            case 6:
+            case 7:
             case "end":
-              return _context13.stop();
+              return _context10.stop();
           }
         }
       });

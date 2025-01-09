@@ -146,4 +146,270 @@ describe('Order Controller', function () {
       });
     });
   });
+  describe('deleteOrder', function () {
+    beforeEach(function () {
+      mockRequest = {
+        params: {
+          id: 'mock-id'
+        }
+      };
+    });
+    it('should delete an order successfully', function _callee5() {
+      var mockOrder;
+      return regeneratorRuntime.async(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              mockOrder = {
+                deleteOne: jest.fn().mockResolvedValue()
+              };
+              Order.findById = jest.fn().mockResolvedValue(mockOrder);
+              _context5.next = 4;
+              return regeneratorRuntime.awrap(orderController.deleteOrder(mockRequest, mockResponse));
+
+            case 4:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockOrder.deleteOne).toHaveBeenCalled();
+              expect(mockResponse.status).toHaveBeenCalledWith(200);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Commande supprimée avec succès.'
+              });
+
+            case 8:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      });
+    });
+    it('should return 404 if order is not found', function _callee6() {
+      return regeneratorRuntime.async(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              Order.findById = jest.fn().mockResolvedValue(null);
+              _context6.next = 3;
+              return regeneratorRuntime.awrap(orderController.deleteOrder(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(404);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Commande non trouvée.'
+              });
+
+            case 6:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      });
+    });
+    it('should return 500 if deletion fails', function _callee7() {
+      return regeneratorRuntime.async(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              Order.findById = jest.fn().mockRejectedValue(new Error('Database Error'));
+              _context7.next = 3;
+              return regeneratorRuntime.awrap(orderController.deleteOrder(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(500);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Erreur serveur',
+                error: expect.any(Error)
+              });
+
+            case 6:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      });
+    });
+  });
+  describe('updateOrder', function () {
+    beforeEach(function () {
+      mockRequest = {
+        params: {
+          id: 'mock-id'
+        },
+        body: {
+          total_amount: 150,
+          delivery_address: '456 rue test',
+          status: 'Livré'
+        }
+      };
+    });
+    it('should update an order successfully', function _callee8() {
+      var mockOrder;
+      return regeneratorRuntime.async(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              mockOrder = {
+                total_amount: 100,
+                delivery_address: '123 rue test',
+                status: 'En cours',
+                save: jest.fn().mockResolvedValue({
+                  total_amount: 150,
+                  delivery_address: '456 rue test',
+                  status: 'Livré'
+                })
+              };
+              Order.findById = jest.fn().mockResolvedValue(mockOrder);
+              _context8.next = 4;
+              return regeneratorRuntime.awrap(orderController.updateOrder(mockRequest, mockResponse));
+
+            case 4:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockOrder.save).toHaveBeenCalled();
+              expect(mockResponse.status).toHaveBeenCalledWith(200);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                total_amount: 150,
+                delivery_address: '456 rue test',
+                status: 'Livré'
+              });
+
+            case 8:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      });
+    });
+    it('should return 404 if order is not found', function _callee9() {
+      return regeneratorRuntime.async(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              Order.findById = jest.fn().mockResolvedValue(null);
+              _context9.next = 3;
+              return regeneratorRuntime.awrap(orderController.updateOrder(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(404);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Commande non trouvée.'
+              });
+
+            case 6:
+            case "end":
+              return _context9.stop();
+          }
+        }
+      });
+    });
+    it('should return 500 if update fails', function _callee10() {
+      return regeneratorRuntime.async(function _callee10$(_context10) {
+        while (1) {
+          switch (_context10.prev = _context10.next) {
+            case 0:
+              Order.findById = jest.fn().mockRejectedValue(new Error('Database Error'));
+              _context10.next = 3;
+              return regeneratorRuntime.awrap(orderController.updateOrder(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(500);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Erreur serveur',
+                error: expect.any(Error)
+              });
+
+            case 6:
+            case "end":
+              return _context10.stop();
+          }
+        }
+      });
+    });
+  });
+  describe('getOrderById', function () {
+    beforeEach(function () {
+      mockRequest = {
+        params: {
+          id: 'mock-id'
+        }
+      };
+    });
+    it('should fetch an order successfully', function _callee11() {
+      var mockOrder;
+      return regeneratorRuntime.async(function _callee11$(_context11) {
+        while (1) {
+          switch (_context11.prev = _context11.next) {
+            case 0:
+              mockOrder = {
+                idUser: '123',
+                total_amount: 100,
+                delivery_address: '123 rue test',
+                status: 'En cours'
+              };
+              Order.findById = jest.fn().mockResolvedValue(mockOrder);
+              _context11.next = 4;
+              return regeneratorRuntime.awrap(orderController.getOrderById(mockRequest, mockResponse));
+
+            case 4:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(200);
+              expect(mockResponse.json).toHaveBeenCalledWith(mockOrder);
+
+            case 7:
+            case "end":
+              return _context11.stop();
+          }
+        }
+      });
+    });
+    it('should return 404 if order is not found', function _callee12() {
+      return regeneratorRuntime.async(function _callee12$(_context12) {
+        while (1) {
+          switch (_context12.prev = _context12.next) {
+            case 0:
+              Order.findById = jest.fn().mockResolvedValue(null);
+              _context12.next = 3;
+              return regeneratorRuntime.awrap(orderController.getOrderById(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(404);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Commande non trouvée.'
+              });
+
+            case 6:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      });
+    });
+    it('should return 500 if fetching the order fails', function _callee13() {
+      return regeneratorRuntime.async(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              Order.findById = jest.fn().mockRejectedValue(new Error('Database Error'));
+              _context13.next = 3;
+              return regeneratorRuntime.awrap(orderController.getOrderById(mockRequest, mockResponse));
+
+            case 3:
+              expect(Order.findById).toHaveBeenCalledWith('mock-id');
+              expect(mockResponse.status).toHaveBeenCalledWith(500);
+              expect(mockResponse.json).toHaveBeenCalledWith({
+                message: 'Erreur serveur',
+                error: expect.any(Error)
+              });
+
+            case 6:
+            case "end":
+              return _context13.stop();
+          }
+        }
+      });
+    });
+  });
 });
