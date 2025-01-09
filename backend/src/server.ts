@@ -25,5 +25,7 @@ app.use("/api/carts", cartRoutes);
 // Exportez l'application pour l'utiliser dans vos tests
 export { app };
 
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

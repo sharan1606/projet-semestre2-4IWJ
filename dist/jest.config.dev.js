@@ -1,8 +1,9 @@
-module.exports = {
+"use strict";
 
+module.exports = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.jsx?$': 'babel-jest'
   },
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
@@ -13,5 +14,4 @@ module.exports = {
       tsconfig: 'tsconfig.json'
     }
   }
-
 };

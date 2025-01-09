@@ -5,25 +5,26 @@
     <!-- Champ Nom -->
     <TextInput
       label="Nom"
-      id="firstName"
-      type="text"
-      placeholder="Entrez votre nom"
-      v-model="firstName"
-      :error="firstNameError"
-      aria-describedby="firstNameError"
-    />
-
-    <!-- Champ Prénom -->
-    <TextInput
-      label="Prénom"
       id="lastName"
       type="text"
-      placeholder="Entrez votre prénom"
+      placeholder="Entrez votre nom"
       v-model="lastName"
       :error="lastNameError"
       aria-describedby="lastNameError"
     />
 
+    <!-- Champ Prénom -->
+    <TextInput
+      label="Prénom"
+      id="firstName"
+      type="text"
+      placeholder="Entrez votre prénom"
+      v-model="firstName"
+      :error="firstNameError"
+      aria-describedby="firstNameError"
+    />
+
+    <!-- Champ Adresse -->
     <TextInput
       label="Adresse"
       id="address"
@@ -97,15 +98,16 @@ export default {
   },
   data() {
     return {
-      firstName: "",
       lastName: "",
-      telephone: "",
+      firstName: "",
+      address: "",
+      phone: "",
       email: "",
       password: "",
       confirmPassword: "",
-      address: "",
-      firstNameError: "",
       lastNameError: "",
+      firstNameError: "",
+      addressError: "",
       phoneError: "",
       emailError: "",
       passwordError: "",
@@ -117,15 +119,16 @@ export default {
   computed: {
     isFormValid() {
       return (
-        this.firstName &&
         this.lastName &&
-        this.telephone &&
+        this.firstName &&
+        this.address &&
+        this.phone &&
         this.email &&
         this.password &&
         this.confirmPassword &&
-        this.address &&
-        !this.firstNameError &&
         !this.lastNameError &&
+        !this.firstNameError &&
+        !this.addressError &&
         !this.phoneError &&
         !this.emailError &&
         !this.passwordError &&
@@ -144,56 +147,44 @@ export default {
     confirmPassword(value) {
       this.confirmPasswordError = value === this.password ? "" : "Les mots de passe ne correspondent pas.";
     },
-    address(value) {
-    this.addressError = value.length > 5 ? "" : "L'adresse doit contenir au moins 5 caractères.";
-    },
     phone(value) {
       this.phoneError = value.length >= 10 ? "" : "Veuillez entrer un numéro de téléphone valide.";
     },
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.isFormValid) {
         this.registerError = "";
         // Envoi des données à l'API
-        fetch("http://152.42.132.157:5000/api/auth/register", {
+        fetch("http://localhost:5000/api/auth/register", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            firstname: this.firstName,
-            lastname: this.lastName,
-            telephone: this.telephone,
-            email: this.email,
-            password: this.password,
-            address: this.address,
+            lastname: lastName,
+            firstname: firstName,
+            address,
+            telephone: phone,
+            email,
+            password,
           }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.message) {
-              alert("Inscription réussie !");
-              this.$router.push("/login");
-            } else {
-              this.registerError = data.error || "Une erreur est survenue.";
-            }
-          })
-          .catch((error) => {
-            console.error("Erreur lors de l'inscription :", error);
-            this.registerError = "Erreur serveur. Veuillez réessayer plus tard.";
-          });
+        });
+
+        if (response.ok) {
+          alert("Inscription réussie ! Veuillez vérifier votre email pour confirmer votre compte.");
+        } else {
+          const error = await response.json();
+          this.registerError = error.message || "Erreur lors de l'inscription.";
+        }
+      } catch (error) {
+        console.error("Erreur réseau :", error);
+        this.registerError = "Erreur réseau. Veuillez réessayer plus tard.";
       }
     },
-    registerUser(firstName, lastName, telephone, email, password, address) {
-      console.log("Utilisateur enregistré avec :", { firstName, lastName, telephone, email, password, address });
-      alert("Inscription réussie !");
-    }
   },
 };
 </script>
 
-<style >
+<style scoped>
 form {
   max-width: 600px;
   margin: 1rem auto;
@@ -239,7 +230,6 @@ button:hover:not(:disabled) {
   background-color: #2980b9;
 }
 
-/* Styles pour les champs Mot de passe et Confirmation côte à côte */
 .password-container {
   display: flex;
   gap: 1rem;

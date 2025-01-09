@@ -8,8 +8,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Adresse email
-    pass: process.env.EMAIL_PASS, // Mot de passe ou App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS, 
   },
 });
 
@@ -17,6 +17,7 @@ const generateToken = (id: string, expiresIn: string = "30d"): string => {
   return jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn });
 };
 
+// Inscription
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password, firstname, lastname, address, telephone } = req.body;
 
@@ -43,11 +44,11 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     const createdUser = await user.save();
 
- 
+    // Générer le lien de confirmation
     const confirmationToken = generateToken(createdUser.idUser, "1h");
     const confirmationLink = `${process.env.FRONTEND_URL}/confirm/${confirmationToken}`;
 
-  
+    // Envoyer un email de confirmation
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -68,32 +69,45 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ message: "Erreur serveur", error });
   }
 };
-
 export const confirmEmail = async (req: Request, res: Response): Promise<void> => {
   const { token } = req.params;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+    // Vérifiez si le token est reçu
+    console.log("Token reçu :", token);
 
+    // Décodez le token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+    console.log("Token décodé :", decoded);
+
+    // Recherchez l'utilisateur
     const user = await User.findOne({ idUser: decoded.id });
     if (!user) {
+      console.error("Utilisateur introuvable pour l'id :", decoded.id);
       res.status(404).json({ message: "Utilisateur non trouvé." });
       return;
     }
 
+    
     if (user.isVerified) {
+      console.log("Utilisateur déjà vérifié :", user.idUser);
       res.status(400).json({ message: "Email déjà confirmé." });
       return;
     }
 
+  
     user.isVerified = true;
     await user.save();
+    console.log("Utilisateur vérifié :", user.idUser);
 
-    res.status(200).json({ message: "Email confirmé avec succès." });
+    
+    res.redirect(`${process.env.FRONTEND_URL}/login`);
   } catch (error) {
+    console.error("Erreur lors de la confirmation :", error);
     res.status(400).json({ message: "Lien invalide ou expiré.", error });
   }
 };
+
 
 export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
   const { email } = req.body;
@@ -127,6 +141,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   }
 };
 
+// Réinitialiser le mot de passe
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
   const { token } = req.params;
   const { newPassword } = req.body;
@@ -151,9 +166,10 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
+
+  console.log("Tentative de connexion avec :", email);
 
   try {
     console.log("Tentative de connexion :", { email, password });
@@ -161,25 +177,26 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log("Utilisateur non trouvé");
+      console.log("Utilisateur introuvable :", email);
       res.status(400).json({ message: "Email ou mot de passe incorrect." });
       return;
     }
 
     if (!user.isVerified) {
-      console.log("Compte non vérifié");
+      console.log("Utilisateur non vérifié :", email);
       res.status(403).json({ message: "Votre compte n'est pas encore confirmé." });
       return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.log("Mot de passe incorrect");
+      console.log("Mot de passe incorrect pour :", email);
       res.status(400).json({ message: "Email ou mot de passe incorrect." });
       return;
     }
 
     const token = generateToken(user.idUser);
+    console.log("Connexion réussie pour :", email);
 
     console.log("Connexion réussie :", user);
 
