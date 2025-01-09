@@ -1,5 +1,4 @@
 module.exports = {
-
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.jsx?$': 'babel-jest',
@@ -13,5 +12,4 @@ module.exports = {
       tsconfig: 'tsconfig.json'
     }
   }
-
 };

@@ -108,11 +108,11 @@ describe("Order API Integration Tests", () => {
     expect(res.body).toHaveProperty("message", "Order deleted successfully");
   });
 });
-=======
+
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-});
+
 
 afterAll(async () => {
     await mongoose.disconnect();
