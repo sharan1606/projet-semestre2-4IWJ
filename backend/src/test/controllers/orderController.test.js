@@ -1,72 +1,96 @@
-import orderController from '../../../src/controllers/orderController';
-import Order from '../../../src/models/orderModel';
+const orderController = require('../../../dist/controllers/orderController');
+const Order = require('../../../dist/models/orderModel').default;
 
-jest.mock('../../../src/models/orderModel');
+jest.mock('../../../dist/models/orderModel');
 
 describe('Order Controller', () => {
-    afterEach(() => {
-        jest.clearAllMocks(); 
+  let mockRequest;
+  let mockResponse;
+
+  beforeEach(() => {
+    mockRequest = {};
+    mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('createOrder', () => {
+    beforeEach(() => {
+      mockRequest = {
+        body: {
+          idUser: '123',
+          total_amount: 100,
+          delivery_address: '123 rue test',
+          status: 'En cours'
+        }
+      };
     });
 
-    describe('createOrder', () => {
-        it('should create a new order successfully', async () => {
-            const req = { body: { userId: '123', products: ['product1', 'product2'], total_amount: 100 } };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    it('should create a new order successfully', async () => {
+      const mockCreatedOrder = {
+        idOrder: 'mock-uuid',
+        ...mockRequest.body,
+      };
 
-            Order.create.mockResolvedValue({ userId: '123', products: ['product1', 'product2'], total_amount: 100 });
+      const mockOrderInstance = {
+        save: jest.fn().mockResolvedValue(mockCreatedOrder)
+      };
+      
+      Order.mockImplementation(() => mockOrderInstance);
 
-            await orderController.createOrder(req, res);
+      await orderController.createOrder(mockRequest, mockResponse);
 
-            expect(Order.create).toHaveBeenCalledWith({
-                userId: '123',
-                products: ['product1', 'product2'],
-                total_amount: 100,
-            });
-            expect(res.status).toHaveBeenCalledWith(201);
-            expect(res.json).toHaveBeenCalledWith({
-                userId: '123',
-                products: ['product1', 'product2'],
-                total_amount: 100,
-            });
-        });
-
-        it('should return 500 if order creation fails', async () => {
-            const req = { body: { userId: '123', products: ['product1', 'product2'] } };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            Order.create.mockRejectedValue(new Error('Database Error'));
-
-            await orderController.createOrder(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database Error' });
-        });
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith(mockCreatedOrder);
     });
 
-    describe('getAllOrders', () => {
-        it('should fetch all orders successfully', async () => {
-            const req = {};
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    it('should return 500 if order creation fails', async () => {
+      const mockOrderInstance = {
+        save: jest.fn().mockRejectedValue(new Error('Database Error'))
+      };
+      
+      Order.mockImplementation(() => mockOrderInstance);
 
-            Order.find.mockResolvedValue([{ userId: '123', products: ['product1', 'product2'] }]);
+      await orderController.createOrder(mockRequest, mockResponse);
 
-            await orderController.getAllOrders(req, res);
-
-            expect(Order.find).toHaveBeenCalled();
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith([{ userId: '123', products: ['product1', 'product2'] }]);
-        });
-
-        it('should return 500 if fetching orders fails', async () => {
-            const req = {};
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            Order.find.mockRejectedValue(new Error('Database Error'));
-
-            await orderController.getAllOrders(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database Error' });
-        });
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Erreur serveur',
+        error: expect.any(Error)
+      });
     });
+  });
+
+  describe('getAllOrders', () => {
+    it('should fetch all orders successfully', async () => {
+      const mockOrders = [
+        { idUser: '123', total_amount: 100, delivery_address: '123 rue test' }
+      ];
+
+      Order.find = jest.fn().mockResolvedValue(mockOrders);
+
+      await orderController.getAllOrders(mockRequest, mockResponse);
+
+      expect(Order.find).toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(mockOrders);
+    });
+
+    it('should return 500 if fetching orders fails', async () => {
+      Order.find = jest.fn().mockRejectedValue(new Error('Database Error'));
+
+      await orderController.getAllOrders(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Erreur serveur',
+        error: expect.any(Error)
+      });
+    });
+  });
 });

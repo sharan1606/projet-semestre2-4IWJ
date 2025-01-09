@@ -10,5 +10,5 @@
     "typeRoots": ["./node_modules/@types", "./@types"] // Inclut les types personnalisés
   },
   "include": ["src/**/*", "@types"], // Prend en compte `@types` dans la compilation
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
